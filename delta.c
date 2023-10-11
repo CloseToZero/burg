@@ -9,7 +9,7 @@ int lexical = 0;
 
 #ifndef NOLEX
 void
-ASSIGNCOST(l, r) DeltaPtr l; DeltaPtr r;
+ASSIGNCOST(DeltaPtr l, DeltaPtr r)
 {
 	int i;
 
@@ -23,7 +23,7 @@ ASSIGNCOST(l, r) DeltaPtr l; DeltaPtr r;
 }
 
 void
-ADDCOST(l, r) DeltaPtr l; DeltaPtr r;
+ADDCOST(DeltaPtr l, DeltaPtr r)
 {
 	int i;
 
@@ -37,7 +37,7 @@ ADDCOST(l, r) DeltaPtr l; DeltaPtr r;
 }
 
 void
-MINUSCOST(l, r) DeltaPtr l; DeltaPtr r;
+MINUSCOST(DeltaPtr l, DeltaPtr r)
 {
 	int i;
 
@@ -51,7 +51,7 @@ MINUSCOST(l, r) DeltaPtr l; DeltaPtr r;
 }
 
 void
-ZEROCOST(x) DeltaPtr x;
+ZEROCOST(DeltaPtr x)
 {
 	int i;
 
@@ -65,7 +65,7 @@ ZEROCOST(x) DeltaPtr x;
 }
 
 int
-LESSCOST(l, r) DeltaPtr l; DeltaPtr r;
+LESSCOST(DeltaPtr l, DeltaPtr r)
 {
 	int i;
 
@@ -84,7 +84,7 @@ LESSCOST(l, r) DeltaPtr l; DeltaPtr r;
 }
 
 int
-EQUALCOST(l, r) DeltaPtr l; DeltaPtr r;
+EQUALCOST(DeltaPtr l, DeltaPtr r)
 {
 	int i;
 
@@ -102,7 +102,7 @@ EQUALCOST(l, r) DeltaPtr l; DeltaPtr r;
 #endif /* NOLEX */
 
 void
-CHECKDIVERGE(c, its, nt, base) DeltaPtr c; Item_Set its; int nt; int base;
+CHECKDIVERGE(DeltaPtr c, Item_Set its, int nt, int base)
 {
 	int i;
 

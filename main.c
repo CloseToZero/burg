@@ -1,7 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
 char rcsid_main[] = "$Id$";
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "b.h"
 #include "fe.h"
 
@@ -15,13 +17,10 @@ static char *outFileName;
 
 static char version[] = "BURG, Version 1.0";
 
-extern int main ARGS((int argc, char **argv));
-
 int
-main(argc, argv) int argc; char **argv;
+main(int argc, char **argv)
 {
 	int i;
-	extern int atoi ARGS((char *));
 
 	for (i = 1; argv[i]; i++) {
 		char **needStr = 0;

@@ -26,7 +26,7 @@ findChainRules()
 }
 
 void
-zero(t) Item_Set t;
+zero(Item_Set t)
 {
 	int i;
 	DeltaCost base;
@@ -63,7 +63,7 @@ zero(t) Item_Set t;
 }
 
 void
-closure(t) Item_Set t;
+closure(Item_Set t)
 {
 	int changes;
 	List pl;
@@ -76,11 +76,11 @@ closure(t) Item_Set t;
 		changes = 0;
 		for (pl = chainrules; pl; pl = pl->next) {
 			Rule p = (Rule) pl->x;
-			register Item *rhs_item = &t->closed[p->pat->children[0]->num];
+			Item *rhs_item = &t->closed[p->pat->children[0]->num];
 
 			if (rhs_item->rule) {	/* rhs is active */
 				DeltaCost dc;
-				register Item *lhs_item = &t->closed[p->lhs->num];
+				Item *lhs_item = &t->closed[p->lhs->num];
 
 				ASSIGNCOST(dc, rhs_item->delta);
 				ADDCOST(dc, p->delta);

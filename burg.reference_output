@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct node *NODEPTR_TYPE;
 
@@ -112,7 +113,7 @@ int burm_state(int op, int l, int r) {
 #else
 int burm_state(op, l, r) int op; int l; int r; {
 #endif
-	register int burm_TEMP;
+	int burm_TEMP;
 #ifndef NDEBUG
 	switch (op) {
 	case 1:
@@ -231,22 +232,16 @@ short burm_closure[4][4] = {
 #define Mul 5
 #define Plus 6
 
-#ifdef __STDC__
-#define ARGS(x) x
-#else
-#define ARGS(x) ()
-#endif
-
-NODEPTR_TYPE buildtree ARGS((int, NODEPTR_TYPE, NODEPTR_TYPE));
-void printcover ARGS((NODEPTR_TYPE, int, int));
-void printtree ARGS((NODEPTR_TYPE));
-int treecost ARGS((NODEPTR_TYPE, int, int));
-void printMatches ARGS((NODEPTR_TYPE));
-int main ARGS((void));
+NODEPTR_TYPE buildtree(int, NODEPTR_TYPE, NODEPTR_TYPE);
+void printcover(NODEPTR_TYPE, int, int);
+void printtree(NODEPTR_TYPE);
+int treecost(NODEPTR_TYPE, int, int);
+void printMatches(NODEPTR_TYPE);
+int main(void);
 
 NODEPTR_TYPE buildtree(op, left, right) int op; NODEPTR_TYPE left; NODEPTR_TYPE right; {
 	NODEPTR_TYPE p;
-	extern void *malloc ARGS((unsigned));
+	extern void *malloc(unsigned);
 
 	p = (NODEPTR_TYPE) malloc(sizeof *p);
 	p->op = op;
@@ -319,7 +314,7 @@ void printMatches(p) NODEPTR_TYPE p; {
 			printf("\t%s\n", burm_string[eruleno]);
 }
 
-main() {
+int main(void) {
 	NODEPTR_TYPE p;
 
 	p = buildtree(Assign,
@@ -343,5 +338,3 @@ main() {
 	printMatches(p);
 	return 0;
 }
-
-exit 0

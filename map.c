@@ -7,11 +7,11 @@ char rcsid_map[] = "$Id$";
 
 Mapping globalMap;
 
-static void growMapping ARGS((Mapping));
-static int hash ARGS((Item_Set, int));
+static void growMapping(Mapping);
+static int hash(Item_Set, int);
 
 Mapping
-newMapping(size) int size;
+newMapping(int size)
 {
 	Mapping m;
 
@@ -29,7 +29,7 @@ newMapping(size) int size;
 }
 
 static void
-growMapping(m) Mapping m;
+growMapping(Mapping m)
 {
 	Item_Set *tmp;
 
@@ -41,12 +41,12 @@ growMapping(m) Mapping m;
 }
 
 static int
-hash(ts, mod) Item_Set ts; int mod;
+hash(Item_Set ts, int mod)
 {
-	register Item *p = ts->virgin;
-	register int v;
-	register Relevant r = ts->relevant;
-	register int nt;
+	Item *p = ts->virgin;
+	int v;
+	Relevant r = ts->relevant;
+	int nt;
 
 	if (!ts->op) {
 		return 0;
@@ -54,7 +54,7 @@ hash(ts, mod) Item_Set ts; int mod;
 
 	v = 0;
 	for (; (nt = *r) != 0; r++) {
-		v ^= ((int)p[nt].rule) + (PRINCIPLECOST(p[nt].delta)<<4);
+		v ^= ((int)((size_t)p[nt].rule)) + (PRINCIPLECOST(p[nt].delta)<<4);
 	}
 	v >>= 4;
 	v &= (mod-1);
@@ -62,7 +62,7 @@ hash(ts, mod) Item_Set ts; int mod;
 }
 
 Item_Set
-encode(m, ts, new) Mapping m; Item_Set ts; int *new;
+encode(Mapping m, Item_Set ts, int *new)
 {
 	int h;
 	List l;
@@ -112,7 +112,7 @@ encode(m, ts, new) Mapping m; Item_Set ts; int *new;
 }
 
 Item_Set
-decode(m, t) Mapping m; ItemSetNum t;
+decode(Mapping m, ItemSetNum t)
 {
 	assert(m);
 	assert(t);
@@ -123,7 +123,7 @@ decode(m, t) Mapping m; ItemSetNum t;
 }
 
 void
-dumpMapping(m) Mapping m;
+dumpMapping(Mapping m)
 {
 	int i;
 

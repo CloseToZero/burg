@@ -4,21 +4,21 @@ char rcsid_table[] = "$Id$";
 #include <string.h>
 #include <stdio.h>
 
-static void growIndex_Map ARGS((Index_Map *));
-static Relevant newRelevant ARGS((void));
-static Dimension newDimension ARGS((Operator, int));
-static void GT_1 ARGS((Table));
-static void GT_2_0 ARGS((Table));
-static void GT_2_1 ARGS((Table));
-static void growTransition ARGS((Table, int));
-static Item_Set restrict ARGS((Dimension, Item_Set));
-static void addHP_1 ARGS((Table, Item_Set));
-static void addHP_2_0 ARGS((Table, Item_Set));
-static void addHP_2_1 ARGS((Table, Item_Set));
-static void addHyperPlane ARGS((Table, int, Item_Set));
+static void growIndex_Map(Index_Map *);
+static Relevant newRelevant(void);
+static Dimension newDimension(Operator, int);
+static void GT_1(Table);
+static void GT_2_0(Table);
+static void GT_2_1(Table);
+static void growTransition(Table, int);
+static Item_Set restrict_(Dimension, Item_Set);
+static void addHP_1(Table, Item_Set);
+static void addHP_2_0(Table, Item_Set);
+static void addHP_2_1(Table, Item_Set);
+static void addHyperPlane(Table, int, Item_Set);
 
 static void
-growIndex_Map(r) Index_Map *r;
+growIndex_Map(Index_Map *r)
 {
 	Index_Map new;
 
@@ -38,7 +38,7 @@ newRelevant()
 }
 
 void
-addRelevant(r, nt) Relevant r; NonTerminalNum nt;
+addRelevant(Relevant r, NonTerminalNum nt)
 {
 	int i;
 
@@ -53,7 +53,7 @@ addRelevant(r, nt) Relevant r; NonTerminalNum nt;
 }
 
 static Dimension
-newDimension(op, index) Operator op; ArityNum index;
+newDimension(Operator op, ArityNum index)
 {
 	Dimension d;
 	List pl;
@@ -82,7 +82,7 @@ newDimension(op, index) Operator op; ArityNum index;
 }
 
 Table
-newTable(op) Operator op;
+newTable(Operator op)
 {
 	Table t;
 	int i, size;
@@ -110,7 +110,7 @@ newTable(op) Operator op;
 }
 
 static void
-GT_1(t) Table t;
+GT_1(Table t)
 {
 	Item_Set	*ts;
 	ItemSetNum 	oldsize = t->dimen[0]->max_size;
@@ -126,7 +126,7 @@ GT_1(t) Table t;
 }
 
 static void
-GT_2_0(t) Table t;
+GT_2_0(Table t)
 {
 	Item_Set	*ts;
 	ItemSetNum 	oldsize = t->dimen[0]->max_size;
@@ -145,7 +145,7 @@ GT_2_0(t) Table t;
 }
 
 static void
-GT_2_1(t) Table t;
+GT_2_1(Table t)
 {
 	Item_Set	*ts;
 	ItemSetNum 	oldsize = t->dimen[1]->max_size;
@@ -176,7 +176,7 @@ GT_2_1(t) Table t;
 }
 
 static void
-growTransition(t, dim) Table t; ArityNum dim;
+growTransition(Table t, ArityNum dim)
 {
 
 	assert(t);
@@ -206,16 +206,16 @@ growTransition(t, dim) Table t; ArityNum dim;
 }
 
 static Item_Set
-restrict(d, ts) Dimension d; Item_Set ts;
+restrict_(Dimension d, Item_Set ts)
 {
 	DeltaCost	base;
 	Item_Set	r;
 	int found;
-	register Relevant r_ptr = d->relevant;
-	register Item *ts_current = ts->closed;
-	register Item *r_current;
-	register int i;
-	register int nt;
+	Relevant r_ptr = d->relevant;
+	Item *ts_current = ts->closed;
+	Item *r_current;
+	int i;
+	int nt;
 
 	ZEROCOST(base);
 	found = 0;
@@ -248,7 +248,7 @@ restrict(d, ts) Dimension d; Item_Set ts;
 }
 
 static void
-addHP_1(t, ts) Table t; Item_Set ts;
+addHP_1(Table t, Item_Set ts)
 {
 	List pl;
 	Item_Set e;
@@ -285,10 +285,10 @@ addHP_1(t, ts) Table t; Item_Set ts;
 }
 
 static void
-addHP_2_0(t, ts) Table t; Item_Set ts;
+addHP_2_0(Table t, Item_Set ts)
 {
 	List pl;
-	register Item_Set e;
+	Item_Set e;
 	Item_Set tmp;
 	int new;
 	int i2;
@@ -300,7 +300,7 @@ addHP_2_0(t, ts) Table t; Item_Set ts;
 		e->kids[0] = ts->representative;
 		e->kids[1] = t->dimen[1]->map->set[i2]->representative;
 		for (pl = t->rules; pl; pl = pl->next) {
-			register Rule p = (Rule) pl->x;
+			Rule p = (Rule) pl->x;
 
 			if (t->op == p->pat->op 
 					&& ts->virgin[p->pat->children[0]->num].rule
@@ -332,10 +332,10 @@ addHP_2_0(t, ts) Table t; Item_Set ts;
 }
 
 static void
-addHP_2_1(t, ts) Table t; Item_Set ts;
+addHP_2_1(Table t, Item_Set ts)
 {
 	List pl;
-	register Item_Set e;
+	Item_Set e;
 	Item_Set tmp;
 	int new;
 	int i1;
@@ -347,7 +347,7 @@ addHP_2_1(t, ts) Table t; Item_Set ts;
 		e->kids[0] = t->dimen[0]->map->set[i1]->representative;
 		e->kids[1] = ts->representative;
 		for (pl = t->rules; pl; pl = pl->next) {
-			register Rule p = (Rule) pl->x;
+			Rule p = (Rule) pl->x;
 
 			if (t->op == p->pat->op 
 					&& ts->virgin[p->pat->children[1]->num].rule
@@ -378,7 +378,7 @@ addHP_2_1(t, ts) Table t; Item_Set ts;
 }
 
 static void
-addHyperPlane(t, i, ts) Table t; ArityNum i; Item_Set ts;
+addHyperPlane(Table t, ArityNum i, Item_Set ts)
 {
 	switch (t->op->arity) {
 	default:
@@ -403,7 +403,7 @@ addHyperPlane(t, i, ts) Table t; ArityNum i; Item_Set ts;
 }
 
 void
-addToTable(t, ts) Table t; Item_Set ts;
+addToTable(Table t, Item_Set ts)
 {
 	ArityNum i;
 
@@ -416,7 +416,7 @@ addToTable(t, ts) Table t; Item_Set ts;
 		Item_Set tmp;
 		int new;
 
-		r = restrict(t->dimen[i], ts);
+		r = restrict_(t->dimen[i], ts);
 		tmp = encode(t->dimen[i]->map, r, &new);
 		if (t->dimen[i]->index_map.max_size <= ts->num) {
 			growIndex_Map(&t->dimen[i]->index_map);
@@ -435,7 +435,7 @@ addToTable(t, ts) Table t; Item_Set ts;
 }
 
 Item_Set *
-transLval(t, row, col) Table t; int row; int col;
+transLval(Table t, int row, int col)
 {
 	switch (t->op->arity) {
 	case 0:
@@ -454,7 +454,7 @@ transLval(t, row, col) Table t; int row; int col;
 }
 
 void
-dumpRelevant(r) Relevant r;
+dumpRelevant(Relevant r)
 {
 	for (; *r; r++) {
 		printf("%4d", *r);
@@ -462,7 +462,7 @@ dumpRelevant(r) Relevant r;
 }
 
 void
-dumpIndex_Map(r) Index_Map *r;
+dumpIndex_Map(Index_Map *r)
 {
 	int i;
 
@@ -474,7 +474,7 @@ dumpIndex_Map(r) Index_Map *r;
 }
 
 void
-dumpDimension(d) Dimension d;
+dumpDimension(Dimension d)
 {
 	printf("BEGIN Dimension:\n");
 	printf("Relevant: ");
@@ -487,7 +487,7 @@ dumpDimension(d) Dimension d;
 }
 
 void
-dumpTable(t, full) Table t; int full;
+dumpTable(Table t, int full)
 {
 	int i;
 
@@ -509,7 +509,7 @@ dumpTable(t, full) Table t; int full;
 }
 
 void
-dumpTransition(t) Table t;
+dumpTransition(Table t)
 {
 	int i,j;
 

@@ -16,7 +16,7 @@ newItemArray()
 }
 
 ItemArray
-itemArrayCopy(src) ItemArray src;
+itemArrayCopy(ItemArray src)
 {
 	ItemArray dst;
 
@@ -26,7 +26,7 @@ itemArrayCopy(src) ItemArray src;
 }
 
 Item_Set
-newItem_Set(relevant) Relevant relevant;
+newItem_Set(Relevant relevant)
 {
 	Item_Set ts;
 	
@@ -49,19 +49,19 @@ newItem_Set(relevant) Relevant relevant;
 }
 
 void
-freeItem_Set(ts) Item_Set ts;
+freeItem_Set(Item_Set ts)
 {
 	assert(!fptr);
 	fptr = ts;
 }
 
 int
-equivSet(a, b) Item_Set a; Item_Set b;
+equivSet(Item_Set a, Item_Set b)
 {
-	register Relevant r;
-	register int nt;
-	register Item *aa = a->virgin;
-	register Item *ba = b->virgin;
+	Relevant r;
+	int nt;
+	Item *aa = a->virgin;
+	Item *ba = b->virgin;
 
 	/*
 	return !bcmp(a->virgin, b->virgin, max_nonterminal * sizeof(Item));
@@ -82,7 +82,7 @@ equivSet(a, b) Item_Set a; Item_Set b;
 }
 
 void
-printRepresentative(f, s) FILE *f; Item_Set s;
+printRepresentative(FILE *f, Item_Set s)
 {
 	if (!s) {
 		return;
@@ -105,14 +105,14 @@ printRepresentative(f, s) FILE *f; Item_Set s;
 }
 
 void
-dumpItem(t) Item *t;
+dumpItem(Item *t)
 {
 	printf("[%s #%d]", t->rule->lhs->name, t->rule->num);
 	dumpCost(t->delta);
 }
 
 void
-dumpItem_Set(ts) Item_Set ts;
+dumpItem_Set(Item_Set ts)
 {
 	int i;
 
@@ -127,7 +127,18 @@ dumpItem_Set(ts) Item_Set ts;
 }
 
 void
-dumpCost(dc) DeltaCost dc;
+dumpCost(DeltaCost dc)
 {
-	printf("(%ld)", (long) dc);
+#ifndef NOLEX
+	printf("(");
+	for (int i = 0; i < DELTAWIDTH; i++) {
+		if (i != 0) {
+			printf(", ");
+		}
+		printf("%d", dc[i]);
+	}
+	printf(")");
+#else NOLEX
+	printf("(%d)", dc);
+#endif
 }

@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 char rcsid_string[] = "$Id$";
 
 #include <stdio.h>
@@ -5,7 +6,7 @@ char rcsid_string[] = "$Id$";
 #include "b.h"
 #include "fe.h"
 
-static StrTableElement newStrTableElement ARGS((void));
+static StrTableElement newStrTableElement(void);
 
 StrTable
 newStrTable()
@@ -20,8 +21,8 @@ newStrTableElement()
 }
 
 void
-dumpStrTable(t) StrTable t;
-{ 
+dumpStrTable(StrTable t)
+{
 	List e;
 	IntList r;
 
@@ -39,7 +40,7 @@ dumpStrTable(t) StrTable t;
 }
 
 StrTableElement
-addString(t, s, eruleno, new) StrTable t; char *s; int eruleno; int *new;
+addString(StrTable t, char *s, int eruleno, int *new)
 {
 	List l;
 	StrTableElement ste;

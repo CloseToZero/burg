@@ -9,12 +9,12 @@ Relation *allpairs;
 int trimflag = 0;
 int debugTrim = 0;
 
-static void siblings ARGS((int, int));
-static void findAllNexts ARGS((void));
-static Relation *newAllPairs ARGS((void));
+static void siblings(int, int);
+static void findAllNexts(void);
+static Relation *newAllPairs(void);
 
 static void
-siblings(i, j) int i; int j;
+siblings(int i, int j)
 {
 	int k;
 	List pl;
@@ -312,7 +312,7 @@ findAllPairs()
 }
 
 void
-trim(t) Item_Set t;
+trim(Item_Set t)
 {
 	int m,n;
 	static short *vec = 0;
@@ -392,9 +392,17 @@ trim(t) Item_Set t;
 }
 
 void
-dumpRelation(r) Relation r;
+dumpRelation(Relation r)
 {
-	printf("{ %d %ld %d %ld }", r->rule->erulenum, (long) r->chain, r->sibFlag, (long) r->sibling);
+#ifndef NOLEX
+	printf("{ %d ", r->rule->erulenum);
+	dumpCost(r->chain);
+	printf(" %d ", r->sibFlag);
+	dumpCost(r->sibling);
+	printf(" }");
+#else
+	printf("{ %d %d %d %d }", r->rule->erulenum, r->chain, r->sibFlag, r->sibling);
+#endif
 }
 
 void

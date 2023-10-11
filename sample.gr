@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct node *NODEPTR_TYPE;
 
@@ -35,22 +36,15 @@ reg:  Assign(addr,reg)        = 7 (1);
 #define Mul 5
 #define Plus 6
 
-#ifdef __STDC__
-#define ARGS(x) x
-#else
-#define ARGS(x) ()
-#endif
-
-NODEPTR_TYPE buildtree ARGS((int, NODEPTR_TYPE, NODEPTR_TYPE));
-void printcover ARGS((NODEPTR_TYPE, int, int));
-void printtree ARGS((NODEPTR_TYPE));
-int treecost ARGS((NODEPTR_TYPE, int, int));
-void printMatches ARGS((NODEPTR_TYPE));
-int main ARGS((void));
+NODEPTR_TYPE buildtree(int, NODEPTR_TYPE, NODEPTR_TYPE);
+void printcover(NODEPTR_TYPE, int, int);
+void printtree(NODEPTR_TYPE);
+int treecost(NODEPTR_TYPE, int, int);
+void printMatches(NODEPTR_TYPE);
+int main(void);
 
 NODEPTR_TYPE buildtree(op, left, right) int op; NODEPTR_TYPE left; NODEPTR_TYPE right; {
 	NODEPTR_TYPE p;
-	extern void *malloc ARGS((unsigned));
 
 	p = (NODEPTR_TYPE) malloc(sizeof *p);
 	p->op = op;
@@ -123,7 +117,7 @@ void printMatches(p) NODEPTR_TYPE p; {
 			printf("\t%s\n", burm_string[eruleno]);
 }
 
-main() {
+int main(void) {
 	NODEPTR_TYPE p;
 
 	p = buildtree(Assign,

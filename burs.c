@@ -4,10 +4,10 @@ char rcsid_burs[] = "$Id$";
 
 Item_Set errorState;
 
-static void doLeaf ARGS((Operator));
+static void doLeaf(Operator);
 
 static void
-doLeaf(leaf) Operator leaf;
+doLeaf(Operator leaf)
 {
 	int new;
 	List pl;

@@ -4,7 +4,7 @@ char rcsid_pattern[] = "$Id$";
 #include "b.h"
 
 Pattern
-newPattern(op) Operator op;
+newPattern(Operator op)
 {
 	Pattern p;
 
@@ -14,7 +14,7 @@ newPattern(op) Operator op;
 }
 
 void
-dumpPattern(p) Pattern p;
+dumpPattern(Pattern p)
 {
 	int i;
 

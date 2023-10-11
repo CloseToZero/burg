@@ -19,7 +19,7 @@ newQ()
 }
 
 void
-addQ(q, ts) Queue q; Item_Set ts;
+addQ(Queue q, Item_Set ts)
 {
 	List qe;
 
@@ -37,7 +37,7 @@ addQ(q, ts) Queue q; Item_Set ts;
 }
 
 Item_Set
-popQ(q) Queue q;
+popQ(Queue q)
 {
 	List qe;
 	Item_Set ts;
@@ -56,7 +56,7 @@ popQ(q) Queue q;
 }
 
 void
-dumpQ(q) Queue q;
+dumpQ(Queue q)
 {
 	printf("Begin Queue\n");
 	foreachList((ListFn)dumpItem_Set, q->head);

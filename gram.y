@@ -24,8 +24,6 @@ char rcsid_gram[] = "$Id$";
 %term K_GRAM
 %term K_START
 %term K_PPERCENT
-%term INT
-%term ID
 
 %token <y_string> ID
 %token <y_int> INT

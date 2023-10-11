@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 char rcsid_be[] = "$Id$";
 
 #include <stdio.h>
@@ -10,24 +11,24 @@ char rcsid_be[] = "$Id$";
 FILE *outfile;
 char *prefix = "burm";
 
-static void doKids ARGS((RuleAST));
-static void doLabel ARGS((Operator));
-static void doLayout ARGS((RuleAST));
-static void doMakeTable ARGS((Operator));
-static void doVector ARGS((RuleAST));
-static void layoutNts ARGS((PatternAST));
-static void makeIndex_Map ARGS((Dimension));
-static void makePvector ARGS((void));
-static void makeState ARGS((void));
-static void printPatternAST ARGS((PatternAST));
-static void printPatternAST_int ARGS((PatternAST));
-static void setVectors ARGS((PatternAST));
-static void trailing_zeroes ARGS((int));
-static int seminal ARGS((int from, int to));
-static void printRule ARGS((RuleAST, char *));
+static void doKids(RuleAST);
+static void doLabel(Operator);
+static void doLayout(RuleAST);
+static void doMakeTable(Operator);
+static void doVector(RuleAST);
+static void layoutNts(PatternAST);
+static void makeIndex_Map(Dimension);
+static void makePvector(void);
+static void makeState(void);
+static void printPatternAST(PatternAST);
+static void printPatternAST_int(PatternAST);
+static void setVectors(PatternAST);
+static void trailing_zeroes(int);
+static int seminal(int from, int to);
+static void printRule(RuleAST, char *);
 
 static void
-doLabel(op) Operator op;
+doLabel(Operator op)
 {
 	fprintf(outfile, "\tcase %d:\n", op->num);
 
@@ -56,7 +57,7 @@ doLabel(op) Operator op;
 }
 
 int
-opsOfArity(arity) int arity;
+opsOfArity(int arity)
 {
 	int c;
 	List l;
@@ -73,7 +74,7 @@ opsOfArity(arity) int arity;
 }
 
 static void
-trailing_zeroes(z) int z;
+trailing_zeroes(int z)
 {
 	int i;
 
@@ -87,11 +88,7 @@ makeLabel()
 {
 	int flag;
 
-	fprintf(outfile, "#ifdef __STDC__\n");
 	fprintf(outfile, "int %s_label(%s_NODEPTR_TYPE n) {\n", prefix, prefix);
-	fprintf(outfile, "#else\n");
-	fprintf(outfile, "int %s_label(n) %s_NODEPTR_TYPE n; {\n", prefix, prefix);
-	fprintf(outfile, "#endif\n");
 
 	fprintf(outfile, 
 	"\t%s_assert(n, %s_PANIC(\"NULL pointer passed to %s_label\\n\"));\n",
@@ -150,7 +147,7 @@ static int vecIndex;
 char vecBuf[4000];
 
 static void
-setVectors(ast) PatternAST ast;
+setVectors(PatternAST ast)
 {
 	char old[4000];
 
@@ -225,7 +222,7 @@ makeRuleTable()
 }
 
 static void
-makeIndex_Map(d) Dimension d;
+makeIndex_Map(Dimension d)
 {
 	int s;
 
@@ -242,7 +239,7 @@ makeIndex_Map(d) Dimension d;
 }
 
 static void
-doMakeTable(op) Operator op;
+doMakeTable(Operator op)
 {
 	int s;
 	int i,j;
@@ -329,10 +326,10 @@ makeLHSmap()
 			fprintf(outfile, "\t0,\n");
 		}
 	}
-	fprintf(outfile, "};\n\n", prefix);
+	fprintf(outfile, "};\n\n");
 }
 
-static int seminal(from, to)
+static int seminal(int from, int to)
 {
 	return allpairs[from][to].rule ? allpairs[from][to].rule->erulenum : 0;
 
@@ -376,7 +373,7 @@ makeClosureArray()
 }
 
 void
-makeCostVector(z,d) int z; DeltaCost d;
+makeCostVector(int z, DeltaCost d)
 {
 	fprintf(outfile, "\t{");
 #ifdef NOLEX
@@ -414,7 +411,7 @@ makeCostArray()
 
 	fprintf(outfile, "short %s_cost[][%d] = {\n", prefix, DELTAWIDTH);
 	for (i = 0; i <= max_erule_num; i++) {
-		makeCostVector(pVector[i], pVector[i] ? pVector[i]->rule->delta : 0);
+		makeCostVector(!!pVector[i], pVector[i] ? pVector[i]->rule->delta : 0);
 		fprintf(outfile, ", /* ");
 		printRule(pVector[i], "(none)");
 		fprintf(outfile, " = %d */\n", i);
@@ -426,7 +423,6 @@ void
 makeStateStringArray()
 {
 	int s;
-	int nt;
 	int states;
 	
 	states = globalMap->count;
@@ -453,7 +449,7 @@ makeDeltaCostArray()
 	for (s = 0; s < states-1; s++) {
 		fprintf(outfile, "{ /* state #%d: ", s+1);
 		printRepresentative(outfile, sortedStates[s]);
-		fprintf(outfile, " */\n", s+1);
+		fprintf(outfile, " */\n");
 		fprintf(outfile, "\t{0},\n");
 		for (nt = 1; nt < last_user_nonterminal; nt++) {
 			makeCostVector(1, sortedStates[s]->closed[nt].delta);
@@ -473,7 +469,7 @@ makeDeltaCostArray()
 }
 
 static void
-printPatternAST_int(p) PatternAST p;
+printPatternAST_int(PatternAST p)
 {
 	List l;
 
@@ -498,7 +494,7 @@ printPatternAST_int(p) PatternAST p;
 }
 
 static void
-printPatternAST(p) PatternAST p;
+printPatternAST(PatternAST p)
 {
 	List l;
 
@@ -519,7 +515,7 @@ printPatternAST(p) PatternAST p;
 }
 
 static void
-layoutNts(ast) PatternAST ast;
+layoutNts(PatternAST ast)
 {
 	char out[30];
 
@@ -551,7 +547,7 @@ layoutNts(ast) PatternAST ast;
 }
 
 static void
-doVector(ast) RuleAST ast;
+doVector(RuleAST ast)
 {
 	if (pVector[ast->rule->erulenum]) {
 		fprintf(stderr, "ERROR: non-unique external rule number: (%d)\n", ast->rule->erulenum);
@@ -568,7 +564,7 @@ makePvector()
 }
 
 static void
-doLayout(ast) RuleAST ast;
+doLayout(RuleAST ast)
 {
 	sprintf(cumBuf, "{ ");
 	layoutNts(ast->pat);
@@ -616,7 +612,7 @@ makeNts()
 }
 
 static void
-printRule(r,d) RuleAST r; char *d;
+printRule(RuleAST r, char *d)
 {
 	if (r) {
 		fprintf(outfile, "%s: ", r->rule->lhs->name);
@@ -643,9 +639,6 @@ makeRuleDescArray()
 	}
 	for (i = 1; i <= max_erule_num; i++) {
 		if (pVector[i]) {
-			Operator o;
-			NonTerminal t;
-
 			fprintf(outfile, "short %s_rule_descriptor_%d[] = {", prefix, i);
 			fprintf(outfile, "%5d,", -pVector[i]->rule->lhs->num);
 			printPatternAST_int(pVector[i]->pat);
@@ -751,7 +744,7 @@ makeRule()
 static StrTable kids;
 
 static void
-doKids(ast) RuleAST ast;
+doKids(RuleAST ast)
 {
 	int new;
 
@@ -772,11 +765,7 @@ makeKids()
 
 	kids = newStrTable();
 
-	fprintf(outfile, "#ifdef __STDC__\n");
 	fprintf(outfile, "%s_NODEPTR_TYPE * %s_kids(%s_NODEPTR_TYPE p, int rulenumber, %s_NODEPTR_TYPE *kids) {\n", prefix, prefix, prefix, prefix);
-	fprintf(outfile, "#else\n");
-	fprintf(outfile, "%s_NODEPTR_TYPE * %s_kids(p, rulenumber, kids) %s_NODEPTR_TYPE p; int rulenumber; %s_NODEPTR_TYPE *kids; {\n", prefix, prefix, prefix, prefix);
-	fprintf(outfile, "#endif\n");
 
 	fprintf(outfile, 
 	"\t%s_assert(p, %s_PANIC(\"NULL node pointer passed to %s_kids\\n\"));\n",
@@ -809,11 +798,7 @@ makeKids()
 void
 makeOpLabel()
 {
-	fprintf(outfile, "#ifdef __STDC__\n");
 	fprintf(outfile, "int %s_op_label(%s_NODEPTR_TYPE p) {\n", prefix, prefix);
-	fprintf(outfile, "#else\n");
-	fprintf(outfile, "int %s_op_label(p) %s_NODEPTR_TYPE p; {\n", prefix, prefix);
-	fprintf(outfile, "#endif\n");
 	fprintf(outfile, 
 	"\t%s_assert(p, %s_PANIC(\"NULL pointer passed to %s_op_label\\n\"));\n",
 				prefix, prefix, prefix);
@@ -824,11 +809,7 @@ makeOpLabel()
 void
 makeStateLabel()
 {
-	fprintf(outfile, "#ifdef __STDC__\n");
 	fprintf(outfile, "int %s_state_label(%s_NODEPTR_TYPE p) {\n", prefix, prefix);
-	fprintf(outfile, "#else\n");
-	fprintf(outfile, "int %s_state_label(p) %s_NODEPTR_TYPE p; {\n", prefix, prefix);
-	fprintf(outfile, "#endif\n");
 
 	fprintf(outfile, 
 	"\t%s_assert(p, %s_PANIC(\"NULL pointer passed to %s_state_label\\n\"));\n",
@@ -840,11 +821,7 @@ makeStateLabel()
 void
 makeChild()
 {
-	fprintf(outfile, "#ifdef __STDC__\n");
 	fprintf(outfile, "%s_NODEPTR_TYPE %s_child(%s_NODEPTR_TYPE p, int index) {\n", prefix, prefix, prefix);
-	fprintf(outfile, "#else\n");
-	fprintf(outfile, "%s_NODEPTR_TYPE %s_child(p, index) %s_NODEPTR_TYPE p; int index; {\n", prefix, prefix, prefix);
-	fprintf(outfile, "#endif\n");
 
 	fprintf(outfile, 
 	"\t%s_assert(p, %s_PANIC(\"NULL pointer passed to %s_child\\n\"));\n",
@@ -1010,11 +987,6 @@ startBurm()
 	fprintf(outfile, "#ifndef %s_PANIC\n", prefix);
 	fprintf(outfile, "#define %s_PANIC\tPANIC\n", prefix);
 	fprintf(outfile, "#endif /* %s_PANIC */\n", prefix);
-	fprintf(outfile, "#ifdef __STDC__\n");
-	fprintf(outfile, "extern void abort(void);\n");
-	fprintf(outfile, "#else\n");
-	fprintf(outfile, "extern void abort();\n");
-	fprintf(outfile, "#endif\n");
 	fprintf(outfile, "#ifdef NDEBUG\n");
  	fprintf(outfile, "#define %s_assert(x,y)\t;\n", prefix);
 	fprintf(outfile, "#else\n");

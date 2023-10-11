@@ -9,7 +9,7 @@ List operators;
 List leaves;
 
 Operator
-newOperator(name, num, arity) char *name; OperatorNum num; ArityNum arity;
+newOperator(char *name, OperatorNum num, ArityNum arity)
 {
 	Operator op;
 
@@ -26,13 +26,13 @@ newOperator(name, num, arity) char *name; OperatorNum num; ArityNum arity;
 }
 
 void
-dumpOperator_s(op) Operator op;
+dumpOperator_s(Operator op)
 {
 	printf("Op: %s(%d)=%d\n", op->name, op->arity, op->num);
 }
 
 void
-dumpOperator(op, full) Operator op; int full;
+dumpOperator(Operator op, int full)
 {
 	dumpOperator_s(op);
 	if (full) {
@@ -41,7 +41,7 @@ dumpOperator(op, full) Operator op; int full;
 }
 
 void
-dumpOperator_l(op) Operator op;
+dumpOperator_l(Operator op)
 {
 	dumpOperator(op, 1);
 }

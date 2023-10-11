@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 char rcsid_lex[] = "$Id$";
 
 #include <ctype.h>
@@ -5,23 +6,26 @@ char rcsid_lex[] = "$Id$";
 #include <string.h>
 #include "b.h"
 #include "fe.h"
-#include "y.tab.h"
+
+// Avoid warning C4273 of MSVC
+#include <stdlib.h>
+#include "gram.tab.h"
 
 static char buf[BUFSIZ];
 
 static int yyline = 1;
 
-typedef int (*ReadFn) ARGS((void));
+typedef int (*ReadFn)(void);
 
-static char *StrCopy ARGS((char *));
-static int code_get ARGS((void));
-static int simple_get ARGS((void));
-static void ReadCharString ARGS((ReadFn, int));
-static void ReadCodeBlock ARGS((void));
-static void ReadOldComment ARGS((ReadFn));
+static char *StrCopy(char *);
+static int code_get(void);
+static int simple_get(void);
+static void ReadCharString(ReadFn, int);
+static void ReadCodeBlock(void);
+static void ReadOldComment(ReadFn);
 
 static char *
-StrCopy(s) char *s;
+StrCopy(char *s)
 {
 	char *t = (char *)zalloc(strlen(s) + 1);
 	strcpy(t,s);
@@ -29,7 +33,7 @@ StrCopy(s) char *s;
 }
 
 static int
-simple_get()
+simple_get(void)
 {
 	int ch;
 	if ((ch = getchar()) == '\n') {
@@ -39,7 +43,7 @@ simple_get()
 }
 
 static int
-code_get()
+code_get(void)
 {
 	int ch;
 	if ((ch = getchar()) == '\n') {
@@ -59,7 +63,7 @@ yypurge()
 
 
 static void
-ReadCharString(rdfn, which) ReadFn rdfn; int which;
+ReadCharString(ReadFn rdfn, int which)
 {
 	int ch;
 	int backslash = 0;
@@ -81,7 +85,7 @@ ReadCharString(rdfn, which) ReadFn rdfn; int which;
 }
 
 static void
-ReadOldComment(rdfn) ReadFn rdfn;
+ReadOldComment(ReadFn rdfn)
 {
 	/* will not work for comments delimiter in string */
 
@@ -246,13 +250,13 @@ yylex()
 }
 
 void
-yyerror1(str) char *str;
+yyerror1(char *str)
 {
 	fprintf(stderr, "line %d: %s", yyline, str);
 }
 
 void
-yyerror(str) char *str;
+yyerror(char *str)
 {
 	yyerror1(str);
 	fprintf(stderr, "\n");

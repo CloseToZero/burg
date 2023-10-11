@@ -11,7 +11,7 @@ struct rule stub_rule;
 List rules;
 
 Rule
-newRule(delta, erulenum, lhs, pat) DeltaPtr delta; ERuleNum erulenum; NonTerminal lhs; Pattern pat;
+newRule(DeltaPtr delta, ERuleNum erulenum, NonTerminal lhs, Pattern pat)
 {
 	Rule p;
 
@@ -32,7 +32,7 @@ newRule(delta, erulenum, lhs, pat) DeltaPtr delta; ERuleNum erulenum; NonTermina
 }
 
 void
-dumpRule(p) Rule p;
+dumpRule(Rule p)
 {
 	dumpNonTerminal(p->lhs);
 	printf(" : ");
@@ -43,7 +43,7 @@ dumpRule(p) Rule p;
 }
 
 void
-dumpRuleList(l) List l;
+dumpRuleList(List l)
 {
 	foreachList((ListFn)dumpRule, l);
 }

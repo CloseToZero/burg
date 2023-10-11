@@ -8,7 +8,7 @@ char rcsid_symtab[] = "$Id$";
 static List symtab;
 
 Symbol
-newSymbol(name) char *name;
+newSymbol(char *name)
 {
 	Symbol s;
 
@@ -19,7 +19,7 @@ newSymbol(name) char *name;
 }
 
 Symbol
-enter(name, new) char *name; int *new;
+enter(char *name, int *new)
 {
 	List l;
 	Symbol s;

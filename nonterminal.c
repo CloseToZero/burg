@@ -1,7 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
 char rcsid_nonterminal[] = "$Id$";
 
 #include "b.h"
 #include <stdio.h>
+#include <string.h>
 
 NonTerminal	start;
 NonTerminalNum	max_nonterminal = 1;
@@ -9,7 +11,7 @@ NonTerminalNum	last_user_nonterminal;
 List		nonterminals;
 
 NonTerminal
-newNonTerminal(name) char *name;
+newNonTerminal(char *name)
 {
 	NonTerminal nt;
 
@@ -26,10 +28,9 @@ newNonTerminal(name) char *name;
 }
 
 int
-nonTerminalName(buf, i) char *buf; int i;
+nonTerminalName(char *buf, int i)
 {
 	List l;
-	extern char *strcpy ARGS((char *, char *));
 
 	for (l = nonterminals; l; l = l->next) {
 		NonTerminal nt = (NonTerminal) l->x;
@@ -43,7 +44,7 @@ nonTerminalName(buf, i) char *buf; int i;
 }
 
 void
-dumpNonTerminal(n) NonTerminal n;
+dumpNonTerminal(NonTerminal n)
 {
 	printf("%s(%d)", n->name, n->num);
 }

@@ -3,6 +3,7 @@
 #define MAX_ARITY	2
 
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef int ItemSetNum;
 typedef int OperatorNum;
@@ -17,22 +18,16 @@ extern RuleNum		max_rule;
 extern ERuleNum		max_erule_num;
 extern int		max_arity;
 
-#ifdef __STDC__
-#define ARGS(x) x
-#else
-#define ARGS(x) ()
-#endif
-
 #ifndef NOLEX
 #define DELTAWIDTH	4
 typedef short DeltaCost[DELTAWIDTH];
 typedef short *DeltaPtr;
-extern void ASSIGNCOST ARGS((DeltaPtr, DeltaPtr));
-extern void ADDCOST ARGS((DeltaPtr, DeltaPtr));
-extern void MINUSCOST ARGS((DeltaPtr, DeltaPtr));
-extern void ZEROCOST ARGS((DeltaPtr));
-extern int LESSCOST ARGS((DeltaPtr, DeltaPtr));
-extern int EQUALCOST ARGS((DeltaPtr, DeltaPtr));
+extern void ASSIGNCOST(DeltaPtr, DeltaPtr);
+extern void ADDCOST(DeltaPtr, DeltaPtr);
+extern void MINUSCOST(DeltaPtr, DeltaPtr);
+extern void ZEROCOST(DeltaPtr);
+extern int LESSCOST(DeltaPtr, DeltaPtr);
+extern int EQUALCOST(DeltaPtr, DeltaPtr);
 #define PRINCIPLECOST(x)	(x[0])
 #else
 #define DELTAWIDTH	1
@@ -208,46 +203,46 @@ struct stateMapTable {
 	List maps;
 };
 
-extern void CHECKDIVERGE ARGS((DeltaPtr, Item_Set, int, int));
-extern void zero ARGS((Item_Set));
-extern ItemArray newItemArray ARGS((void));
-extern ItemArray itemArrayCopy ARGS((ItemArray));
-extern Item_Set newItem_Set ARGS((Relevant));
-extern void freeItem_Set ARGS((Item_Set));
-extern Mapping newMapping ARGS((int));
-extern NonTerminal newNonTerminal ARGS((char *));
-extern int nonTerminalName ARGS((char *, int));
-extern Operator newOperator ARGS((char *, OperatorNum, ArityNum));
-extern Pattern newPattern ARGS((Operator));
-extern Rule newRule ARGS((DeltaPtr, ERuleNum, NonTerminal, Pattern));
-extern List newList ARGS((void *, List));
-extern IntList newIntList ARGS((int, IntList));
-extern int length ARGS((List));
-extern List appendList ARGS((void *, List));
-extern Table newTable ARGS((Operator));
-extern Queue newQ ARGS((void));
-extern void addQ ARGS((Queue, Item_Set));
-extern Item_Set popQ ARGS((Queue));
-extern int equivSet ARGS((Item_Set, Item_Set));
-extern Item_Set decode ARGS((Mapping, ItemSetNum));
-extern Item_Set encode ARGS((Mapping, Item_Set, int *));
-extern void build ARGS((void));
-extern Item_Set *transLval ARGS((Table, int, int));
+extern void CHECKDIVERGE(DeltaPtr, Item_Set, int, int);
+extern void zero(Item_Set);
+extern ItemArray newItemArray(void);
+extern ItemArray itemArrayCopy(ItemArray);
+extern Item_Set newItem_Set(Relevant);
+extern void freeItem_Set(Item_Set);
+extern Mapping newMapping(int);
+extern NonTerminal newNonTerminal(char *);
+extern int nonTerminalName(char *, int);
+extern Operator newOperator(char *, OperatorNum, ArityNum);
+extern Pattern newPattern(Operator);
+extern Rule newRule(DeltaPtr, ERuleNum, NonTerminal, Pattern);
+extern List newList(void *, List);
+extern IntList newIntList(int, IntList);
+extern int length(List);
+extern List appendList(void *, List);
+extern Table newTable(Operator);
+extern Queue newQ(void);
+extern void addQ(Queue, Item_Set);
+extern Item_Set popQ(Queue);
+extern int equivSet(Item_Set, Item_Set);
+extern Item_Set decode(Mapping, ItemSetNum);
+extern Item_Set encode(Mapping, Item_Set, int *);
+extern void build(void);
+extern Item_Set *transLval(Table, int, int);
 
-typedef void *	(*ListFn) ARGS((void *));
-extern void foreachList ARGS((ListFn, List));
-extern void reveachList ARGS((ListFn, List));
+typedef void *	(*ListFn)(void *);
+extern void foreachList(ListFn, List);
+extern void reveachList(ListFn, List);
 
-extern void addToTable ARGS((Table, Item_Set));
+extern void addToTable(Table, Item_Set);
 
-extern void closure ARGS((Item_Set));
-extern void trim ARGS((Item_Set));
-extern void findChainRules ARGS((void));
-extern void findAllPairs ARGS((void));
-extern void addRelevant ARGS((Relevant, NonTerminalNum));
+extern void closure(Item_Set);
+extern void trim(Item_Set);
+extern void findChainRules(void);
+extern void findAllPairs(void);
+extern void addRelevant(Relevant, NonTerminalNum);
 
-extern void *zalloc ARGS((unsigned int));
-extern void zfree ARGS((void *));
+extern void *zalloc(size_t);
+extern void zfree(void *);
 
 extern NonTerminal	start;
 extern List		rules;
@@ -267,27 +262,27 @@ extern Relation 	*allpairs;
 extern Item_Set		*sortedStates;
 extern Item_Set		errorState;
 
-extern void dumpRelevant ARGS((Relevant));
-extern void dumpOperator ARGS((Operator, int));
-extern void dumpOperator_s ARGS((Operator));
-extern void dumpOperator_l ARGS((Operator));
-extern void dumpNonTerminal ARGS((NonTerminal));
-extern void dumpRule ARGS((Rule));
-extern void dumpRuleList ARGS((List));
-extern void dumpItem ARGS((Item *));
-extern void dumpItem_Set ARGS((Item_Set));
-extern void dumpMapping ARGS((Mapping));
-extern void dumpQ ARGS((Queue));
-extern void dumpIndex_Map ARGS((Index_Map *));
-extern void dumpDimension ARGS((Dimension));
-extern void dumpPattern ARGS((Pattern));
-extern void dumpTable ARGS((Table, int));
-extern void dumpTransition ARGS((Table));
-extern void dumpCost ARGS((DeltaCost));
-extern void dumpAllPairs ARGS((void));
-extern void dumpRelation ARGS((Relation));
-extern void dumpSortedStates ARGS((void));
-extern void dumpSortedRules ARGS((void));
+extern void dumpRelevant(Relevant);
+extern void dumpOperator(Operator, int);
+extern void dumpOperator_s(Operator);
+extern void dumpOperator_l(Operator);
+extern void dumpNonTerminal(NonTerminal);
+extern void dumpRule(Rule);
+extern void dumpRuleList(List);
+extern void dumpItem(Item *);
+extern void dumpItem_Set(Item_Set);
+extern void dumpMapping(Mapping);
+extern void dumpQ(Queue);
+extern void dumpIndex_Map(Index_Map *);
+extern void dumpDimension(Dimension);
+extern void dumpPattern(Pattern);
+extern void dumpTable(Table, int);
+extern void dumpTransition(Table);
+extern void dumpCost(DeltaCost);
+extern void dumpAllPairs(void);
+extern void dumpRelation(Relation);
+extern void dumpSortedStates(void);
+extern void dumpSortedRules(void);
 extern int debugTrim;
 
 #ifdef DEBUG
@@ -306,11 +301,10 @@ extern int debugTables;
 #define assert(c) ((void) ((c) || fatal(__FILE__,__LINE__)))
 #endif
 
-extern void doStart ARGS((char *));
-extern void exit ARGS((int));
-extern int fatal ARGS((char *, int));
-extern void yyerror ARGS((char *));
-extern void yyerror1 ARGS((char *));
+extern void doStart(char *);
+extern int fatal(char *, int);
+extern void yyerror(char *);
+extern void yyerror1(char *);
 
 extern void makeRuleDescArray();
 extern void makeDeltaCostArray();

@@ -3,7 +3,7 @@ char rcsid_list[] = "$Id$";
 #include "b.h"
 
 IntList
-newIntList(x, next) int x; IntList next;
+newIntList(int x, IntList next)
 {
 	IntList l;
 
@@ -16,7 +16,7 @@ newIntList(x, next) int x; IntList next;
 }
 
 List
-newList(x, next) void *x; List next;
+newList(void *x, List next)
 {
 	List l;
 
@@ -29,7 +29,7 @@ newList(x, next) void *x; List next;
 }
 
 List
-appendList(x, l) void *x; List l;
+appendList(void *x, List l)
 {
 	List last;
 	List p;
@@ -47,7 +47,7 @@ appendList(x, l) void *x; List l;
 }
 
 void
-foreachList(f, l) ListFn f; List l;
+foreachList(ListFn f, List l)
 {
 	for (; l; l = l->next) {
 		(*f)(l->x);
@@ -55,7 +55,7 @@ foreachList(f, l) ListFn f; List l;
 }
 
 void
-reveachList(f, l) ListFn f; List l;
+reveachList(ListFn f, List l)
 {
 	if (l) {
 		reveachList(f, l->next);
@@ -64,7 +64,7 @@ reveachList(f, l) ListFn f; List l;
 }
 
 int
-length(l) List l;
+length(List l)
 {
 	int c = 0;
 

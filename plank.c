@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 char rcsid_plank[] = "$Id$";
 
 #include <stdio.h>
@@ -15,32 +16,32 @@ static struct stateMapTable smt;
 int exceptionTolerance = 0;
 static int plankSize = 32;
 
-static Plank newPlank ARGS((void));
-static PlankMap newPlankMap ARGS((int));
-static StateMap newStateMap ARGS((void));
-static Exception newException ARGS((int, int));
-static void enterStateMap ARGS((PlankMap, short *, int, int *));
-static List assemblePlanks ARGS((void));
-static void assignRules ARGS((RuleAST));
-static int stateCompare ARGS((Item_Set *, Item_Set *));
-static int ruleCompare ARGS((RuleAST *, RuleAST *));
-static void renumber ARGS((void));
-static short * newVector ARGS((void));
-static int width ARGS((int));
-static PlankMap mapToPmap ARGS((Dimension));
-static void doDimPmaps ARGS((Operator));
-static void doNonTermPmaps ARGS((NonTerminal));
-static void makePmaps ARGS((void));
-static void outPlank ARGS((Plank));
-static void purgePlanks ARGS((List));
-static void inToEx ARGS((void));
-static void makePlankRuleMacros ARGS((void));
-static void makePlankRule ARGS((void));
-static void exceptionSwitch ARGS((List, char *, char *, char *, int, char *));
-static void doPlankLabel ARGS((Operator));
-static void doPlankLabelSafely ARGS((Operator));
-static void doPlankLabelMacrosSafely ARGS((Operator));
-static void makePlankState ARGS((void));
+static Plank newPlank(void);
+static PlankMap newPlankMap(int);
+static StateMap newStateMap(void);
+static Exception newException(int, int);
+static void enterStateMap(PlankMap, short *, int, int *);
+static List assemblePlanks(void);
+static void assignRules(RuleAST);
+static int stateCompare(const void *, const void *);
+static int ruleCompare(const void *, const void *);
+static void renumber(void);
+static short * newVector(void);
+static int width(int);
+static PlankMap mapToPmap(Dimension);
+static void doDimPmaps(Operator);
+static void doNonTermPmaps(NonTerminal);
+static void makePmaps(void);
+static void outPlank(Plank);
+static void purgePlanks(List);
+static void inToEx(void);
+static void makePlankRuleMacros(void);
+static void makePlankRule(void);
+static void exceptionSwitch(List, char *, char *, char *, int, char *);
+static void doPlankLabel(Operator);
+static void doPlankLabelSafely(Operator);
+static void doPlankLabelMacrosSafely(Operator);
+static void makePlankState(void);
 
 static Plank
 newPlank()
@@ -57,7 +58,7 @@ newPlank()
 }
 
 static PlankMap
-newPlankMap(offset) int offset;
+newPlankMap(int offset)
 {
 	PlankMap im;
 
@@ -82,7 +83,7 @@ newStateMap()
 }
 
 static Exception
-newException(index, value) int index; int value;
+newException(int index, int value)
 {
 	Exception e;
 
@@ -93,7 +94,7 @@ newException(index, value) int index; int value;
 }
 
 static void
-enterStateMap(im, v, width, new) PlankMap im; short * v; int width; int *new;
+enterStateMap(PlankMap im, short *v, int width, int *new)
 {
 	int i;
 	StateMap sm;
@@ -179,14 +180,16 @@ RuleAST *sortedRules;
 static int count;
 
 static void
-assignRules(ast) RuleAST ast;
+assignRules(RuleAST ast)
 {
 	sortedRules[count++] = ast;
 }
 
 static int
-stateCompare(s, t) Item_Set *s; Item_Set *t;
+stateCompare(const void *a, const void *b)
 {
+	const Item_Set *s = (const Item_Set *)a;
+	const Item_Set *t = (const Item_Set *)b;
 	int res = 0;
 	if ((res = strcmp((*s)->op->name, (*t)->op->name)) != 0)
 		return res;
@@ -198,8 +201,10 @@ stateCompare(s, t) Item_Set *s; Item_Set *t;
 }
 
 static int
-ruleCompare(s, t) RuleAST *s; RuleAST *t;
+ruleCompare(const void *a, const void *b)
 {
+	const RuleAST *s = (const RuleAST *)a;
+	const RuleAST *t = (const RuleAST *)b;
 	int res = 0;
 	if ((res = strcmp((*s)->lhs, (*t)->lhs)) != 0)
 		return res;
@@ -283,7 +288,7 @@ newVector()
 }
 
 static int
-width(v) int v;
+width(int v)
 {
 	int c;
 
@@ -295,7 +300,7 @@ width(v) int v;
 }
 
 static PlankMap
-mapToPmap(d) Dimension d;
+mapToPmap(Dimension d)
 {
 	PlankMap im;
 	short *v;
@@ -322,7 +327,7 @@ mapToPmap(d) Dimension d;
 }
 
 static void
-doDimPmaps(op) Operator op;
+doDimPmaps(Operator op)
 {
 	int i, j;
 	Dimension d;
@@ -441,7 +446,7 @@ doDimPmaps(op) Operator op;
 static NonTerminal *ntVector;
 
 static void
-doNonTermPmaps(n) NonTerminal n;
+doNonTermPmaps(NonTerminal n)
 {
 	short *v;
 	PlankMap im;
@@ -481,7 +486,7 @@ makePmaps()
 }
 
 static void
-outPlank(p) Plank p;
+outPlank(Plank p)
 {
 	List f;
 	int i;
@@ -508,7 +513,7 @@ outPlank(p) Plank p;
 }
 
 static void
-purgePlanks(planks) List planks;
+purgePlanks(List planks)
 {
 	List p;
 
@@ -615,7 +620,7 @@ makePlankRule()
 }
 
 static void
-exceptionSwitch(es, sw, pre, post, offset, def) List es; char *sw; char *pre; char *post; int offset; char *def;
+exceptionSwitch(List es, char *sw, char *pre, char *post, int offset, char *def)
 {
 	if (es) {
 		fprintf(outfile, "\t\tswitch (%s) {\n", sw);
@@ -635,7 +640,7 @@ exceptionSwitch(es, sw, pre, post, offset, def) List es; char *sw; char *pre; ch
 }
 
 static void
-doPlankLabel(op) Operator op;
+doPlankLabel(Operator op)
 {
 	PlankMap im0;
 	PlankMap im1;
@@ -701,7 +706,7 @@ doPlankLabel(op) Operator op;
 }
 
 static void
-doPlankLabelMacrosSafely(op) Operator op;
+doPlankLabelMacrosSafely(Operator op)
 {
 	PlankMap im0;
 	PlankMap im1;
@@ -832,7 +837,7 @@ doPlankLabelMacrosSafely(op) Operator op;
 	}
 }
 static void
-doPlankLabelSafely(op) Operator op;
+doPlankLabelSafely(Operator op)
 {
 	fprintf(outfile, "\tcase %d:\n", op->num);
 	switch (op->arity) {
@@ -886,7 +891,7 @@ makePlankState()
 	}
 	fprintf(outfile, "#endif\n");
 
-	fprintf(outfile, "\tregister int %s_TEMP;\n", prefix);
+	fprintf(outfile, "\tint %s_TEMP;\n", prefix);
 
 	fprintf(outfile, "#ifndef NDEBUG\n");
 
