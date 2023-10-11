@@ -17,11 +17,6 @@ struct node {
 #ifndef burm_PANIC
 #define burm_PANIC	PANIC
 #endif /* burm_PANIC */
-#ifdef __STDC__
-extern void abort(void);
-#else
-extern void abort();
-#endif
 #ifdef NDEBUG
 #define burm_assert(x,y)	;
 #else
@@ -80,11 +75,7 @@ static short burm_eruleMap[] = {
 #define burm_con_rule(state)	burm_eruleMap[burm_plank_0[state].f6 +4]
 #define burm_addr_rule(state)	burm_eruleMap[burm_plank_0[state].f5 +0]
 
-#ifdef __STDC__
 int burm_rule(int state, int goalnt) {
-#else
-int burm_rule(state, goalnt) int state; int goalnt; {
-#endif
 	burm_assert(state >= 0 && state < 8, burm_PANIC("Bad state %d passed to burm_rule\n", state));
 	switch(goalnt) {
 	case 1:
@@ -108,11 +99,7 @@ int burm_TEMP;
 #define burm_Mul_state(l,r)	( (burm_TEMP = burm_Mul_transition[burm_plank_0[l].f2][burm_plank_0[r].f1]) ? burm_TEMP + 4 : 0 )
 #define burm_Plus_state(l,r)	( (burm_TEMP = burm_Plus_transition[burm_plank_0[l].f3][burm_plank_0[r].f4]) ? burm_TEMP + 5 : 0 )
 
-#ifdef __STDC__
 int burm_state(int op, int l, int r) {
-#else
-int burm_state(op, l, r) int op; int l; int r; {
-#endif
 	int burm_TEMP;
 #ifndef NDEBUG
 	switch (op) {
@@ -160,11 +147,7 @@ int burm_state(op, l, r) int op; int l; int r; {
 
 #ifdef burm_INCLUDE_EXTRA
 
-#ifdef __STDC__
 int burm_label(burm_NODEPTR_TYPE n) {
-#else
-int burm_label(n) burm_NODEPTR_TYPE n; {
-#endif
 	burm_assert(n, burm_PANIC("NULL pointer passed to burm_label\n"));
 	switch (burm_OP_LABEL(n)) {
 	default: burm_PANIC("Bad op %d in burm_label\n", burm_OP_LABEL(n)); abort(); return 0;
@@ -179,11 +162,7 @@ int burm_label(n) burm_NODEPTR_TYPE n; {
 		return burm_STATE_LABEL(n) = burm_state(burm_OP_LABEL(n), burm_label(burm_LEFT_CHILD(n)), burm_label(burm_RIGHT_CHILD(n)));
 	}
 }
-#ifdef __STDC__
 burm_NODEPTR_TYPE * burm_kids(burm_NODEPTR_TYPE p, int rulenumber, burm_NODEPTR_TYPE *kids) {
-#else
-burm_NODEPTR_TYPE * burm_kids(p, rulenumber, kids) burm_NODEPTR_TYPE p; int rulenumber; burm_NODEPTR_TYPE *kids; {
-#endif
 	burm_assert(p, burm_PANIC("NULL node pointer passed to burm_kids\n"));
 	burm_assert(kids, burm_PANIC("NULL kids pointer passed to burm_kids\n"));
 	switch (rulenumber) {
@@ -338,3 +317,4 @@ int main(void) {
 	printMatches(p);
 	return 0;
 }
+

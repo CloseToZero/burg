@@ -596,11 +596,7 @@ makePlankRule()
 
 	makePlankRuleMacros();
 
-	fprintf(outfile, "#ifdef __STDC__\n");
 	fprintf(outfile, "int %s_rule(int state, int goalnt) {\n", prefix);
-	fprintf(outfile, "#else\n");
-	fprintf(outfile, "int %s_rule(state, goalnt) int state; int goalnt; {\n", prefix);
-	fprintf(outfile, "#endif\n");
 
 	fprintf(outfile, 
 	"\t%s_assert(state >= 0 && state < %d, %s_PANIC(\"Bad state %%d passed to %s_rule\\n\", state));\n",
@@ -866,30 +862,22 @@ makePlankState()
 	foreachList((ListFn) doPlankLabelMacrosSafely, operators);
 	fprintf(outfile, "\n");
 
-	fprintf(outfile, "#ifdef __STDC__\n");
 	switch (max_arity) {
 	case -1:
 		fprintf(stderr, "ERROR: no terminals in grammar.\n");
 		exit(1);
 	case 0:
 		fprintf(outfile, "int %s_state(int op) {\n", prefix);
-		fprintf(outfile, "#else\n");
-		fprintf(outfile, "int %s_state(op) int op; {\n", prefix);
 		break;
 	case 1:
 		fprintf(outfile, "int %s_state(int op, int l) {\n", prefix);
-		fprintf(outfile, "#else\n");
-		fprintf(outfile, "int %s_state(op, l) int op; int l; {\n", prefix);
 		break;
 	case 2:
 		fprintf(outfile, "int %s_state(int op, int l, int r) {\n", prefix);
-		fprintf(outfile, "#else\n");
-		fprintf(outfile, "int %s_state(op, l, r) int op; int l; int r; {\n", prefix);
 		break;
 	default:
 		assert(0);
 	}
-	fprintf(outfile, "#endif\n");
 
 	fprintf(outfile, "\tint %s_TEMP;\n", prefix);
 
