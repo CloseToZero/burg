@@ -211,17 +211,17 @@ doTable(Operator op)
 }
 
 void 
-doSpec(List decls, List rules)
+doSpec(List decls, List ruleASTs_)
 {
 	foreachList((ListFn) doDecl, decls);
 	debug(debugTables, foreachList((ListFn) dumpOperator_l, operators));
 
-	ruleASTs = rules;
-	reveachList((ListFn) doEnterNonTerm, rules);
+	ruleASTs = ruleASTs_;
+	reveachList((ListFn) doEnterNonTerm, ruleASTs_);
 
 	last_user_nonterminal = max_nonterminal;
 
-	reveachList((ListFn) doRule, rules);
+	reveachList((ListFn) doRule, ruleASTs_);
 	debug(debugTables, foreachList((ListFn) dumpRule, rules));
 
 	foreachList((ListFn) doTable, operators);
