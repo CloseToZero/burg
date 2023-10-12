@@ -28,7 +28,7 @@ dumpPattern(Pattern p)
 		if (p->op->arity > 0) {
 			printf("(");
 			for (i = 0; i < p->op->arity; i++) {
-				printf("%s ", p->children[i]->name);
+				printf(i == 0 ? "%s" : ",%s", p->children[i]->name);
 			}
 			printf(")");
 		}

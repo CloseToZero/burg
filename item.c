@@ -133,7 +133,7 @@ dumpCost(DeltaCost dc)
 	printf("(");
 	for (int i = 0; i < DELTAWIDTH; i++) {
 		if (i != 0) {
-			printf(", ");
+			printf(",");
 		}
 		printf("%d", dc[i]);
 	}
