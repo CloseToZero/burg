@@ -13,3 +13,13 @@ The code is imported and be modified as:
 
 See README_ORIGINAL for the original README file, checkout the first
 commit of this repository if you want the original source code.
+
+# How to build?
+
+1. Install [CMake](https://cmake.org/)
+2. Create a directory `build` in the project's root directory
+3. Open a terminal and cd to the `build` directory we just created
+4. Execute the command `cmake -S .. -B .`
+5. Build the executable by command `cmake --build .` (or open the
+   `burg.sln` solution file inside the `build` directory and using
+   Visual Studio to build if you are on Windows)
