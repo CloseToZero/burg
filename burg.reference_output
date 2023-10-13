@@ -218,9 +218,8 @@ int treecost(NODEPTR_TYPE, int, int);
 void printMatches(NODEPTR_TYPE);
 int main(void);
 
-NODEPTR_TYPE buildtree(op, left, right) int op; NODEPTR_TYPE left; NODEPTR_TYPE right; {
+NODEPTR_TYPE buildtree(int op, NODEPTR_TYPE left, NODEPTR_TYPE right) {
 	NODEPTR_TYPE p;
-	extern void *malloc(unsigned);
 
 	p = (NODEPTR_TYPE) malloc(sizeof *p);
 	p->op = op;
@@ -229,7 +228,7 @@ NODEPTR_TYPE buildtree(op, left, right) int op; NODEPTR_TYPE left; NODEPTR_TYPE 
 	return p;
 }
 
-void printcover(p, goalnt, indent) NODEPTR_TYPE p; int goalnt; int indent; {
+void printcover(NODEPTR_TYPE p, int goalnt, int indent) {
 	int eruleno = burm_rule(STATE_LABEL(p), goalnt);
 	short *nts = burm_nts[eruleno];
 	NODEPTR_TYPE kids[10];
@@ -247,7 +246,7 @@ void printcover(p, goalnt, indent) NODEPTR_TYPE p; int goalnt; int indent; {
 		printcover(kids[i], nts[i], indent+1);
 }
 
-void printtree(p) NODEPTR_TYPE p; {
+void printtree(NODEPTR_TYPE p) {
 	int op = burm_op_label(p);
 
 	printf("%s", burm_opname[op]);
@@ -269,7 +268,7 @@ void printtree(p) NODEPTR_TYPE p; {
 	}
 }
 
-int treecost(p, goalnt, costindex) NODEPTR_TYPE p; int goalnt; int costindex; {
+int treecost(NODEPTR_TYPE p, int goalnt, int costindex) {
 	int eruleno = burm_rule(STATE_LABEL(p), goalnt);
 	int cost = burm_cost[eruleno][costindex], i;
 	short *nts = burm_nts[eruleno];
@@ -281,11 +280,11 @@ int treecost(p, goalnt, costindex) NODEPTR_TYPE p; int goalnt; int costindex; {
 	return cost;
 }
 
-void printMatches(p) NODEPTR_TYPE p; {
+void printMatches(NODEPTR_TYPE p) {
 	int nt;
 	int eruleno;
 
-	printf("Node 0x%lx= ", (unsigned long)p);
+	printf("Node 0x%p= ", p);
 	printtree(p);
 	printf(" matched rules:\n");
 	for (nt = 1; burm_ntname[nt] != (char*)NULL; nt++)
