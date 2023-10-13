@@ -23,3 +23,9 @@ commit of this repository if you want the original source code.
 5. Build the executable by command `cmake --build .` (or open the
    `burg.sln` solution file inside the `build` directory and using
    Visual Studio to build if you are on Windows)
+
+# Why the instruction selector generated from `sample.gr` can't be copmiled?
+
+`sample.gr` use `burm_string`, `burm_op_label` and `burm_arity` etc to
+produce diagnostics, these `burm_xx` variables only get generated when you
+pass `-I` option to the instruction selector generator.
