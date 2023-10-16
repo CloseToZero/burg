@@ -9,6 +9,7 @@ The code is imported and be modified as:
    parser files into the repository.
 3. Fix several compiler warnings and errors.
 4. Use CMake as build system, remove the Makefile.
+5. Fix some BUGs (for details, see the log of this repository).
 
 
 See README_ORIGINAL for the original README file, checkout the first
@@ -21,7 +22,7 @@ commit of this repository if you want the original source code.
 3. Open a terminal and cd to the `build` directory we just created
 4. Execute the command `cmake -S .. -B .`
 5. Build the executable by command `cmake --build .` (or open the
-   `burg.sln` solution file inside the `build` directory and using
+   `burg.sln` solution file inside the `build` directory and use
    Visual Studio to build if you are on Windows)
 
 # Why the instruction selector generated from `sample.gr` can't be copmiled?

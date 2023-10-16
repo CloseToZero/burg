@@ -272,7 +272,7 @@ findAllPairs()
 		NonTerminalNum lhs = p->lhs->num;
 		Relation r = &allpairs[lhs ][ rhs];
 
-		if (LESSCOST(p->delta, r->chain)) {
+		if (!r->rule || LESSCOST(p->delta, r->chain)) {
 			ASSIGNCOST(r->chain, p->delta);
 			r->rule = p;
 		}
