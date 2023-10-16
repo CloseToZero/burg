@@ -25,7 +25,7 @@ commit of this repository if you want the original source code.
    `burg.sln` solution file inside the `build` directory and use
    Visual Studio to build if you are on Windows)
 
-# Why the instruction selector generated from `sample.gr` can't be copmiled?
+# Why the instruction selector generated from `sample.gr` can't be compiled?
 
 `sample.gr` use `burm_string`, `burm_op_label` and `burm_arity` etc to
 produce diagnostics, these `burm_xx` variables only get generated when you
