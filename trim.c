@@ -266,17 +266,6 @@ findAllPairs()
 	int j;
 
 	allpairs = newAllPairs();
-	for (pl = chainrules; pl; pl = pl->next) {
-		Rule p = (Rule) pl->x;
-		NonTerminalNum rhs = p->pat->children[0]->num;
-		NonTerminalNum lhs = p->lhs->num;
-		Relation r = &allpairs[lhs ][ rhs];
-
-		if (!r->rule || LESSCOST(p->delta, r->chain)) {
-			ASSIGNCOST(r->chain, p->delta);
-			r->rule = p;
-		}
-	}
 	for (j = 1; j < max_nonterminal; j++) {
 		Relation r = &allpairs[j ][ j];
 		ZEROCOST(r->chain);

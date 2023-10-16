@@ -9,7 +9,6 @@ The code is imported and be modified as:
    parser files into the repository.
 3. Fix several compiler warnings and errors.
 4. Use CMake as build system, remove the Makefile.
-5. Fix some BUGs (for details, see the log of this repository).
 
 
 See README_ORIGINAL for the original README file, checkout the first
