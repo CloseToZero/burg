@@ -39,7 +39,6 @@ following (I will talk about the details after the list):
 2. [Engineering a simple, efficient code-generator generator](https://dl.acm.org/doi/abs/10.1145/151640.151642)
 3. [Simple and efficient BURS table generation](https://dl.acm.org/doi/10.1145/143095.143145)
 4. [Efficient retargetable code generation using bottom-up tree pattern matching](https://dl.acm.org/doi/10.1016/0096-0551%2890%2990006-B)
-5. [Optimal code generation for expression trees: an application BURS theory](https://dl.acm.org/doi/10.1145/73560.73586)
 
 [Code Generation Using Tree Matching and Dynamic Programming](https://dl.acm.org/doi/10.1145/69558.75700)
 talks about TWIG, just like BURG, TWIG is an instruction selector generator.
@@ -73,5 +72,65 @@ to be updated during the matching, which is less efficient, if you drop
 some extensions and use counts, then the requirement of same arity can
 be dropped.
 
-**TODO** talk about the last three papers, what BURG and BURS stands for, the
-mapping between functions in our code and [Simple and efficient BURS table generation](https://dl.acm.org/doi/10.1145/143095.143145).
+The last two papers are all about BURS (stands for bottom-up rewrite
+system, also note that BURG stands for BURS generator, so the
+underlying system is actually BURS, not BURG), BURS use automaton to
+simulate the bottom up dynamic programming algorithm that is used to find
+a minimum-cost cover. Starts from the leaves of the input IR tree,
+ask ourselves: what rules (or patterns, the right hand sides of rules)
+can match those leaves? The answer to this question is those rules
+whose right hand side are one of those leaves, we partition the rules
+by the right hand side, so the rules in a partation will both match
+the same leave, like `{lhs1 -> leave1, lhs2 -> leave1 }, { lhs3 -> leave2 }`.
+Each partation can be seen as a state, it encode the information about the matches
+(what non-terminals can match what leaves).
+Here `{lhs1 -> leave1, lhs2 -> leave1 }` is a state, `{ lhs3 -> leave2 }` is also a state.
+Because we also need costs information to find a minimum-cost cover,
+so the state should also encode information about costs,
+this means that the above states should be modified to be
+`{(lhs1 -> leave1, cost1), (lhs2 -> leave1, cost2) }, { (lhs3 -> leave2, cost3) }`,
+we call these states: leaf states.
+After matching leaves, we can climb one step up the input IR tree,
+start matching those interior nodes whose children are all leaves,
+use the information encoded in the leaf states, again, we will get
+new states like
+`{(lhs4 -> interior_node1, cost4), (lhs5 -> interior_node1, cost5) }, { (lhs6 -> interior_node2, cost6) }`,
+here `interior_node1` and `interior_node2` are nodes whose children are all leaves.
+We can continue this process to find a bunch of new states, but we quickly realized a problem:
+as the input IR tree we received get larger and larger, there
+generally will have infinite possible costs, so the possible states are also infinite,
+we can't represent infinite states (unless they have common patterns), so rather
+than store `(rule, cost)` pairs inside a state, we store `(rule, normalized_cost)`,
+the `normalized_cost` is defined to be the cost minus the minimum cost in the same state,
+in practice, most machine's specification will generate finite states if use normalized costs,
+but this is not guaranteed, the number of states may still be infinite, and our BURG
+may run forever until out of memory, see
+[BURG - fast optimal instruction selection and tree parsing](https://dl.acm.org/doi/10.1145/131080.131089)
+figure 3 for an example, in this case, you can fallback to use IBURG.
+
+In the above, I had given a brief overview of how BURS work, now we are
+going to talk about the last two papers.
+
+[Simple and efficient BURS table generation](https://dl.acm.org/doi/10.1145/143095.143145)
+explains how table generation work in BURG and various optimizations,
+it's pretty much the same as the repository's code. The table generation
+is the core part of this repository, so if you understand the table generation,
+then you already understand most of the repository's code.
+The following table is the mapping between function names in repository's code and
+[Simple and efficient BURS table generation](https://dl.acm.org/doi/10.1145/143095.143145):
+
+| function name in the paper | function name in the repository |
+|----------------------------|---------------------------------|
+| Main                       | main                            |
+| NormalizeCosts             | zero                            |
+| Closure                    | closure                         |
+| ComputeLeafStates          | doLeaf                          |
+| Project                    | restrict_                       |
+| Triangle                   | siblings                        |
+| Trim                       | trim                            |
+| ComputeTransitions         | build and addToTable            |
+
+
+[Efficient retargetable code generation using bottom-up tree pattern matching](https://dl.acm.org/doi/10.1016/0096-0551%2890%2990006-B)
+gives more details about the underlying algorithms of the repository's code
+and also give a formalization of the problem.
