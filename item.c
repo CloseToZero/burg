@@ -70,7 +70,7 @@ equivSet(Item_Set a, Item_Set b)
 	r = a->relevant ? a->relevant : b->relevant;
 	assert(r);
 
-	if (a->op && b->op && a->op != b->op) {
+	if (a->op != b->op) {
 		return 0;
 	}
 	for (; (nt = *r) != 0; r++) {

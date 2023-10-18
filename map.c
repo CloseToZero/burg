@@ -95,7 +95,7 @@ encode(Mapping m, Item_Set ts, int *new)
 	h = hash(ts, m->hash_size);
 	for (l = m->hash[h]; l; l = l->next) {
 		Item_Set s = (Item_Set) l->x;
-		if (ts->op == s->op && equivSet(ts, s)) {
+		if (equivSet(ts, s)) {
 			ts->num = s->num;
 			return s;
 		}
