@@ -18,15 +18,13 @@ doLeaf(Operator leaf)
 
 	ts = newItem_Set(leaf->table->relevant);
 
-	for (pl = rules; pl; pl = pl->next) {
+	for (pl = leaf->table->rules; pl; pl = pl->next) {
 		Rule p = (Rule) pl->x;
-		if (p->pat->op == leaf) {	
-			if (!ts->virgin[p->lhs->num].rule || p->delta < ts->virgin[p->lhs->num].delta) {
-				ts->virgin[p->lhs->num].rule = p;
-				ASSIGNCOST(ts->virgin[p->lhs->num].delta, p->delta);
-				ts->op = leaf;
-			}
-		}
+        if (!ts->virgin[p->lhs->num].rule || p->delta < ts->virgin[p->lhs->num].delta) {
+          ts->virgin[p->lhs->num].rule = p;
+          ASSIGNCOST(ts->virgin[p->lhs->num].delta, p->delta);
+          ts->op = leaf;
+        }
 	}
 	trim(ts);
 	zero(ts);
