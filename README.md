@@ -7,7 +7,8 @@ The code is imported and be modified as:
 2. Use GNU Bison to generate parser files gram.tab.c and gram.tab.h
    from the YACC specification file gram.y, and include the generated
    parser files into the repository.
-3. Fix several compiler warnings, errors and BUGs.
+3. Fix several compiler warnings, errors and unnecessary ways of
+   writing code.
 4. Use CMake as build system, remove the Makefile.
 
 

@@ -312,7 +312,7 @@ mapToPmap(Dimension d)
 	im = newPlankMap(0);
 	v = newVector();
 	for (i = 0; i < globalMap->count-1; i++) {
-		int index = d->map->set[d->index_map.class[sortedStates[i]->num]->num]->num;
+		int index = d->index_map.class[sortedStates[i]->num]->num;
 		assert(index >= 0);
 		v[i+1] = index;
 	}
@@ -345,7 +345,7 @@ doDimPmaps(Operator op)
 			v = newVector();
 			im = newPlankMap(op->baseNum);
 			for (i = 0; i < globalMap->count-1; i++) {
-				int index = d->map->set[d->index_map.class[sortedStates[i]->num]->num]->num;
+				int index = d->index_map.class[sortedStates[i]->num]->num;
 				if (index) {
 					Item_Set *ts = transLval(op->table, index, 0);
 					v[i+1] = (*ts)->newNum - op->baseNum+1;
@@ -368,7 +368,7 @@ doDimPmaps(Operator op)
 			im = newPlankMap(op->baseNum);
 			d = op->table->dimen[1];
 			for (i = 0; i < globalMap->count-1; i++) {
-				int index = d->map->set[d->index_map.class[sortedStates[i]->num]->num]->num;
+				int index = d->index_map.class[sortedStates[i]->num]->num;
 				if (index) {
 					Item_Set *ts = transLval(op->table, 1, index);
 					v[i+1] = (*ts)->newNum - op->baseNum+1;
@@ -385,7 +385,7 @@ doDimPmaps(Operator op)
 			im = newPlankMap(op->baseNum);
 			d = op->table->dimen[0];
 			for (i = 0; i < globalMap->count-1; i++) {
-				int index = d->map->set[d->index_map.class[sortedStates[i]->num]->num]->num;
+				int index = d->index_map.class[sortedStates[i]->num]->num;
 				if (index) {
 					Item_Set *ts = transLval(op->table, index, 1);
 					v[i +1] = (*ts)->newNum - op->baseNum +1;
