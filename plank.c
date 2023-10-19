@@ -195,8 +195,6 @@ stateCompare(const void *a, const void *b)
 		return res;
 	if ((*s)->num < (*t)->num) return -1;
 	if ((*s)->num > (*t)->num) return 1;
-	if ((*s)->newNum < (*t)->newNum) return -1;
-	if ((*s)->newNum > (*t)->newNum) return 1;
 	return 0;
 }
 
