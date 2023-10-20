@@ -91,13 +91,13 @@ Because we also need costs information to find a minimum-cost cover,
 so the state should also encode information about costs,
 this means that the above states should be modified to be
 `{(lhs1 -> leave1, cost1), (lhs2 -> leave1, cost2) }, { (lhs3 -> leave2, cost3) }`,
-we call these states: leaf states.
+we call these states: leaf states, and call the corresponding left hand sides: leaf non-terminals,
 After matching leaves, we can climb one step up the input IR tree,
 start matching those interior nodes whose children are all leaves,
 use the information encoded in the leaf states, again, we will get
 new states like
-`{(lhs4 -> interior_node1, cost4), (lhs5 -> interior_node1, cost5) }, { (lhs6 -> interior_node2, cost6) }`,
-here `interior_node1` and `interior_node2` are nodes whose children are all leaves.
+`{(lhs4 -> op1(leave-non-terminal1, leave-non-terminal2), cost4), (lhs5 -> op1(leave-non-terminal3, leave-non-terminal4), cost5) }, { (lhs6 -> op2(leave-non-terminal1, leave-non-terminal2), cost6) }`,
+here `op1` and `op2` are operators whose children are all leaf non-terminals.
 We can continue this process to find a bunch of new states, but we quickly realized a problem:
 as the input IR tree we received get larger and larger, there
 generally will have infinite possible costs, so the possible states are also infinite,
