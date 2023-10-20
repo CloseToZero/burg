@@ -260,7 +260,7 @@ addHP_1(Table t, Item_Set ts)
 	e->kids[0] = ts->representative;
 	for (pl = t->rules; pl; pl = pl->next) {
 		Rule p = (Rule) pl->x;
-		if (t->op == p->pat->op && ts->virgin[p->pat->children[0]->num].rule) {
+		if (ts->virgin[p->pat->children[0]->num].rule) {
 			DeltaCost dc;
 			ASSIGNCOST(dc, ts->virgin[p->pat->children[0]->num].delta);
 			ADDCOST(dc, p->delta);
@@ -302,9 +302,8 @@ addHP_2_0(Table t, Item_Set ts)
 		for (pl = t->rules; pl; pl = pl->next) {
 			Rule p = (Rule) pl->x;
 
-			if (t->op == p->pat->op 
-					&& ts->virgin[p->pat->children[0]->num].rule
-					&& t->dimen[1]->map->set[i2]->virgin[p->pat->children[1]->num].rule){
+			if (ts->virgin[p->pat->children[0]->num].rule
+				&& t->dimen[1]->map->set[i2]->virgin[p->pat->children[1]->num].rule) {
 				DeltaCost dc;
 				ASSIGNCOST(dc, p->delta);
 				ADDCOST(dc, ts->virgin[p->pat->children[0]->num].delta);
@@ -349,9 +348,8 @@ addHP_2_1(Table t, Item_Set ts)
 		for (pl = t->rules; pl; pl = pl->next) {
 			Rule p = (Rule) pl->x;
 
-			if (t->op == p->pat->op 
-					&& ts->virgin[p->pat->children[1]->num].rule
-					&& t->dimen[0]->map->set[i1]->virgin[p->pat->children[0]->num].rule){
+			if (ts->virgin[p->pat->children[1]->num].rule
+				&& t->dimen[0]->map->set[i1]->virgin[p->pat->children[0]->num].rule) {
 				DeltaCost dc;
 				ASSIGNCOST(dc, p->delta );
 				ADDCOST(dc, ts->virgin[p->pat->children[1]->num].delta);
