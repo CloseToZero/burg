@@ -40,6 +40,7 @@ following (I will talk about the details after the list):
 2. [Engineering a simple, efficient code-generator generator](https://dl.acm.org/doi/abs/10.1145/151640.151642)
 3. [Simple and efficient BURS table generation](https://dl.acm.org/doi/10.1145/143095.143145)
 4. [Efficient retargetable code generation using bottom-up tree pattern matching](https://dl.acm.org/doi/10.1016/0096-0551%2890%2990006-B)
+5. [Optimal code generation for expression trees: an application BURS theory](https://dl.acm.org/doi/10.1145/73560.73586)
 
 [Code Generation Using Tree Matching and Dynamic Programming](https://dl.acm.org/doi/10.1145/69558.75700)
 talks about TWIG, just like BURG, TWIG is an instruction selector generator.
@@ -73,7 +74,7 @@ to be updated during the matching, which is less efficient, if you drop
 some extensions and use counts, then the requirement of same arity can
 be dropped.
 
-The last two papers are all about BURS (stands for bottom-up rewrite
+The last three papers are all about BURS (stands for bottom-up rewrite
 system, also note that BURG stands for BURS generator, so the
 underlying system is actually BURS, not BURG), BURS use automaton to
 simulate the bottom up dynamic programming algorithm that is used to find
@@ -110,7 +111,7 @@ may run forever until out of memory, see
 figure 3 for an example, in this case, you can fallback to use IBURG.
 
 In the above, I had given a brief overview of how BURS work, now we are
-going to talk about the last two papers.
+going to talk about the last three papers.
 
 [Simple and efficient BURS table generation](https://dl.acm.org/doi/10.1145/143095.143145)
 explains how table generation work in BURG and various optimizations,
@@ -135,3 +136,5 @@ The following table is the mapping between function names in repository's code a
 [Efficient retargetable code generation using bottom-up tree pattern matching](https://dl.acm.org/doi/10.1016/0096-0551%2890%2990006-B)
 gives more details about the underlying algorithms of the repository's code
 and also give a formalization of the problem.
+
+[Optimal code generation for expression trees: an application BURS theory](https://dl.acm.org/doi/10.1145/73560.73586) gives the underlying theory of BURS.
