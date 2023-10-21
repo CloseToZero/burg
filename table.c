@@ -208,40 +208,22 @@ growTransition(Table t, ArityNum dim)
 static Item_Set
 restrict_(Dimension d, Item_Set ts)
 {
-	DeltaCost	base;
 	Item_Set	r;
-	int found;
 	Relevant r_ptr = d->relevant;
 	Item *ts_current = ts->closed;
 	Item *r_current;
 	int i;
 	int nt;
 
-	ZEROCOST(base);
-	found = 0;
 	r = newItem_Set(d->relevant);
 	r_current = r->virgin;
 	for (i = 0; (nt = r_ptr[i]) != 0; i++) {
 		if (ts_current[nt].rule) {
 			r_current[nt].rule = &stub_rule;
-			if (!found) {
-				found = 1;
-				ASSIGNCOST(base, ts_current[nt].delta);
-			} else {
-				if (LESSCOST(ts_current[nt].delta, base)) {
-					ASSIGNCOST(base, ts_current[nt].delta);
-				}
-			}
+			ASSIGNCOST(r_current[nt].delta, ts_current[nt].delta);
 		}
 	}
 
-	/* zero align */
-	for (i = 0; (nt = r_ptr[i]) != 0; i++) {
-		if (r_current[nt].rule) {
-			ASSIGNCOST(r_current[nt].delta, ts_current[nt].delta);
-			MINUSCOST(r_current[nt].delta, base);
-		}
-	}
 	assert(!r->closed);
 	r->representative = ts;
 	return r;
