@@ -110,6 +110,19 @@ but this is not guaranteed, the number of states may still be infinite, and our 
 may run forever until out of memory, see
 [BURG - fast optimal instruction selection and tree parsing](https://dl.acm.org/doi/10.1145/131080.131089)
 figure 3 for an example, in this case, you can fallback to use IBURG.
+And one more critical thing you need to figure it out is: why replace
+full costs with normalized costs can work? In particular, how can
+costs normalized within different states be compared? The short answer
+is: we only compare normalized costs within same state (see functions
+`addHP_1` , `addHP_2_0` and `addHP_2_1` in the repository). Then
+naturally, we will wonder: is compare normalized costs within the same
+state enough? In the end, you may convince youself by proofing some
+theorems, induction on the height of the **input** IR tree, simulate
+state transitions using the generated table, backward reasoning the
+table generation process. Or more simply (not necessarily the case),
+write down a simple rule sets, come out with a few shallow input IR
+trees with different arities, simulate the table generation process
+and the runtime state transitions process, to convince youself.
 
 In the above, I had given a brief overview of how BURS work, now we are
 going to talk about the last three papers.
