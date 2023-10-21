@@ -42,6 +42,7 @@ following (I will talk about the details after the list):
 4. [Efficient retargetable code generation using bottom-up tree pattern matching](https://dl.acm.org/doi/10.1016/0096-0551%2890%2990006-B)
 5. [Optimal code generation for expression trees: an application BURS theory](https://dl.acm.org/doi/10.1145/73560.73586)
 
+
 [Code Generation Using Tree Matching and Dynamic Programming](https://dl.acm.org/doi/10.1145/69558.75700)
 talks about TWIG, just like BURG, TWIG is an instruction selector generator.
 [Engineering a simple, efficient code-generator generator](https://dl.acm.org/doi/abs/10.1145/151640.151642)
@@ -138,3 +139,14 @@ gives more details about the underlying algorithms of the repository's code
 and also give a formalization of the problem.
 
 [Optimal code generation for expression trees: an application BURS theory](https://dl.acm.org/doi/10.1145/73560.73586) gives the underlying theory of BURS.
+
+Additionally, I found Gabriel Hjort Blindell's dissertation and book particularly helpful:
+
+1. Book: [Instruction Selection: Principles, Methods, and Applications](https://www.amazon.sg/Instruction-Selection-Principles-Methods-Applications/dp/3319816586)
+   gives a broad survey over the large body of literature on instruction selection.
+2. Dissertation: [Universal Instruction Selection](http://kth.diva-portal.org/smash/record.jsf?pid=diva2%3A1185339&dswid=-2845),
+   just like the above book, this dissertation also gives a broad
+   survey over the large body of literature on instruction selection,
+   and more importantly, introduces a new approach called universal
+   instruction selection that integrates global instruction selection
+   with global code motion and block ordering.
