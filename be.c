@@ -423,14 +423,26 @@ void
 makeStateStringArray()
 {
 	int s;
-	int states;
+	int nstates;
+	int smin;
+	int smax;
+	Item_Set *states;
 	
-	states = globalMap->count;
+	nstates = globalMap->count;
 	fprintf(outfile, "\nchar * %s_state_string[] = {\n", prefix);
 	fprintf(outfile, "\" not a state\", /* state 0 */\n");
-	for (s = 0; s < states-1; s++) {
+	if (sortedStates) {
+	  states = sortedStates;
+	  smin = 0;
+	  smax = nstates-1;
+	} else {
+	  states = globalMap->set;
+	  smin = 1;
+	  smax = nstates;
+	}
+	for (s = smin; s < smax; s++) {
 		fprintf(outfile, "\t\"");
-		printRepresentative(outfile, sortedStates[s]);
+		printRepresentative(outfile, states[s]);
 		fprintf(outfile, "\", /* state #%d */\n", s+1);
 	}
 	fprintf(outfile, "};\n");
@@ -441,21 +453,33 @@ makeDeltaCostArray()
 {
 	int s;
 	int nt;
-	int states;
+	int nstates;
+	int smin;
+	int smax;
+	Item_Set *states;
 	
-	states = globalMap->count;
-	fprintf(outfile, "\nshort %s_delta_cost[%d][%d][%d] = {\n", prefix, states, last_user_nonterminal, DELTAWIDTH);
+	nstates = globalMap->count;
+	fprintf(outfile, "\nshort %s_delta_cost[%d][%d][%d] = {\n", prefix, nstates, last_user_nonterminal, DELTAWIDTH);
 	fprintf(outfile, "{{0}}, /* state 0 */\n");
-	for (s = 0; s < states-1; s++) {
+	if (sortedStates) {
+	  states = sortedStates;
+	  smin = 0;
+	  smax = nstates-1;
+	} else {
+	  states = globalMap->set;
+	  smin = 1;
+	  smax = nstates;
+	}
+	for (s = smin; s < smax; s++) {
 		fprintf(outfile, "{ /* state #%d: ", s+1);
-		printRepresentative(outfile, sortedStates[s]);
+		printRepresentative(outfile, states[s]);
 		fprintf(outfile, " */\n");
 		fprintf(outfile, "\t{0},\n");
 		for (nt = 1; nt < last_user_nonterminal; nt++) {
-			makeCostVector(1, sortedStates[s]->closed[nt].delta);
+			makeCostVector(1, states[s]->closed[nt].delta);
 			fprintf(outfile, ", /* ");
-			if (sortedStates[s]->closed[nt].rule) {
-				int erulenum = sortedStates[s]->closed[nt].rule->erulenum;
+			if (states[s]->closed[nt].rule) {
+				int erulenum = states[s]->closed[nt].rule->erulenum;
 				printRule(pVector[erulenum], "(none)");
 				fprintf(outfile, " = %d */", erulenum);
 			} else {
