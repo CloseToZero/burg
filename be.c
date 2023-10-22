@@ -1028,6 +1028,7 @@ void
 reportDiagnostics()
 {
 	List l;
+	int startUsed;
 
 	for (l = operators; l; l = l->next) {
 		Operator op = (Operator) l->x;
@@ -1035,13 +1036,18 @@ reportDiagnostics()
 			fprintf(stderr, "warning: Unreferenced Operator: %s\n", op->name);
 		}
 	}
+	startUsed = 0;
 	for (l = rules; l; l = l->next) {
 		Rule r = (Rule) l->x;
+		if (r->lhs == start) {
+		  startUsed = 1;
+		}
 		if (!r->used && r->num < max_ruleAST) {
 			fprintf(stderr, "warning: Unused Rule: #%d\n", r->erulenum);
 		}
 	}
-	if (!start->pmap) {
+
+	if (!startUsed) {
 		fprintf(stderr, "warning: Start Nonterminal (%s) does not appear on LHS.\n", start->name);
 	}
 
