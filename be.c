@@ -233,7 +233,7 @@ makeIndex_Map(Dimension d)
 				fprintf(outfile, "\t/* %d-%d */\n", s-10, s-1);
 			}
 		}
-		fprintf(outfile, "%5d", d->map->set[d->index_map.class[s]->num]->num);
+		fprintf(outfile, "%5d", d->index_map.class[s]->num);
 	}
 	fprintf(outfile, "};\n");
 }
@@ -264,7 +264,7 @@ doMakeTable(Operator op)
 					fprintf(outfile, "\t/* %d-%d */\n", s-10, s-1);
 				}
 			}
-			fprintf(outfile, "%5d", op->table->transition[d->map->set[d->index_map.class[s]->num]->num]->num);
+			fprintf(outfile, "%5d", op->table->transition[d->index_map.class[s]->num]->num);
 		}
 		fprintf(outfile, "};\n");
 		break;
