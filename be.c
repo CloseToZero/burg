@@ -426,6 +426,7 @@ makeStateStringArray()
 	int nstates;
 	int smin;
 	int smax;
+	int soffset;
 	Item_Set *states;
 	
 	nstates = globalMap->count;
@@ -435,15 +436,17 @@ makeStateStringArray()
 	  states = sortedStates;
 	  smin = 0;
 	  smax = nstates-1;
+	  soffset = 1;
 	} else {
 	  states = globalMap->set;
 	  smin = 1;
 	  smax = nstates;
+	  soffset = 0;
 	}
 	for (s = smin; s < smax; s++) {
 		fprintf(outfile, "\t\"");
 		printRepresentative(outfile, states[s]);
-		fprintf(outfile, "\", /* state #%d */\n", s+1);
+		fprintf(outfile, "\", /* state #%d */\n", s+soffset);
 	}
 	fprintf(outfile, "};\n");
 }
@@ -456,6 +459,7 @@ makeDeltaCostArray()
 	int nstates;
 	int smin;
 	int smax;
+	int soffset;
 	Item_Set *states;
 	
 	nstates = globalMap->count;
@@ -465,13 +469,15 @@ makeDeltaCostArray()
 	  states = sortedStates;
 	  smin = 0;
 	  smax = nstates-1;
+	  soffset = 1;
 	} else {
 	  states = globalMap->set;
 	  smin = 1;
 	  smax = nstates;
+	  soffset = 0;
 	}
 	for (s = smin; s < smax; s++) {
-		fprintf(outfile, "{ /* state #%d: ", s+1);
+		fprintf(outfile, "{ /* state #%d: ", s+soffset);
 		printRepresentative(outfile, states[s]);
 		fprintf(outfile, " */\n");
 		fprintf(outfile, "\t{0},\n");
