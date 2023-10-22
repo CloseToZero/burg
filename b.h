@@ -291,6 +291,7 @@ extern int debugTrim;
 #define debug(a,b)
 #endif
 extern int debugTables;
+extern int simpleTables;
 
 #define TABLE_INCR	8
 #define STATES_INCR	64

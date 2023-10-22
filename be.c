@@ -432,16 +432,16 @@ makeStateStringArray()
 	nstates = globalMap->count;
 	fprintf(outfile, "\nchar * %s_state_string[] = {\n", prefix);
 	fprintf(outfile, "\" not a state\", /* state 0 */\n");
-	if (sortedStates) {
-	  states = sortedStates;
-	  smin = 0;
-	  smax = nstates-1;
-	  soffset = 1;
-	} else {
+	if (simpleTables) {
 	  states = globalMap->set;
 	  smin = 1;
 	  smax = nstates;
 	  soffset = 0;
+	} else {
+	  states = sortedStates;
+	  smin = 0;
+	  smax = nstates-1;
+	  soffset = 1;
 	}
 	for (s = smin; s < smax; s++) {
 		fprintf(outfile, "\t\"");
@@ -465,16 +465,16 @@ makeDeltaCostArray()
 	nstates = globalMap->count;
 	fprintf(outfile, "\nshort %s_delta_cost[%d][%d][%d] = {\n", prefix, nstates, last_user_nonterminal, DELTAWIDTH);
 	fprintf(outfile, "{{0}}, /* state 0 */\n");
-	if (sortedStates) {
-	  states = sortedStates;
-	  smin = 0;
-	  smax = nstates-1;
-	  soffset = 1;
-	} else {
+	if (simpleTables) {
 	  states = globalMap->set;
 	  smin = 1;
 	  smax = nstates;
 	  soffset = 0;
+	} else {
+	  states = sortedStates;
+	  smin = 0;
+	  smax = nstates-1;
+	  soffset = 1;
 	}
 	for (s = smin; s < smax; s++) {
 		fprintf(outfile, "{ /* state #%d: ", s+soffset);

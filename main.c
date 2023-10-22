@@ -8,7 +8,7 @@ char rcsid_main[] = "$Id$";
 #include "fe.h"
 
 int debugTables = 0;
-static int simpleTables = 0;
+int simpleTables = 0;
 static int internals = 0;
 static int diagnostics = 0;
 
