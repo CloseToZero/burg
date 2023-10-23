@@ -111,7 +111,9 @@ enterStateMap(PlankMap im, short *v, int width, int *new)
 		sm = (StateMap) l->x;
 		ecount = 0;
 		for (i = 0; i < size; i++) {
-			if (v[i] != -1 && sm->value[i] != -1 && v[i] != sm->value[i]) {
+			assert(v[i] >= 0);
+			assert(sm->value[i] >= 0);
+			if (v[i] != sm->value[i]) {
 				if (++ecount > exceptionTolerance) {
 					goto again;
 				}
@@ -120,12 +122,7 @@ enterStateMap(PlankMap im, short *v, int width, int *new)
 		for (i = 0; i < size; i++) {
 			assert(v[i] >= 0);
 			assert(sm->value[i] >= 0);
-			if (v[i] == -1) {
-				continue;
-			}
-			if (sm->value[i] == -1) {
-				sm->value[i] = v[i];
-			} else if (v[i] != sm->value[i]) {
+			if (v[i] != sm->value[i]) {
 				im->exceptions = newList(newException(i,v[i]), im->exceptions);
 			}
 		}
@@ -500,7 +497,8 @@ outPlank(Plank p)
 		fprintf(outfile, "\t{");
 		for (f = p->fields; f; f = f->next) {
 			StateMap sm = (StateMap) f->x;
-			fprintf(outfile, "%4d,", sm->value[i] == -1 ? ERROR_VAL : sm->value[i]);
+			assert(sm->value[i] >= 0);
+			fprintf(outfile, "%4d,", sm->value[i]);
 		}
 		fprintf(outfile, "},\t/* row %d */\n", i);
 	}
