@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 char rcsid_nonterminal[] = "$Id$";
 
 #include "b.h"

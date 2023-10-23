@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 char rcsid_fe[] = "$Id$";
 
 #include <stdio.h>
