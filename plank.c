@@ -315,7 +315,6 @@ mapToPmap(Dimension d)
 		assert(index >= 0);
 		v[i+1] = index;
 	}
-	v[0] = 0;
 	enterStateMap(im, v, width(d->map->count), &new);
 	if (!new) {
 		zfree(v);
