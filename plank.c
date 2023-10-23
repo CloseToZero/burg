@@ -460,7 +460,7 @@ doNonTermPmaps(NonTerminal n)
 	im = newPlankMap(n->baseNum);
 	v = newVector();
 	for (i = 0; i < globalMap->count-1; i++) {
-		Rule r = globalMap->set[sortedStates[i]->num]->closed[n->num].rule;
+		Rule r = sortedStates[i]->closed[n->num].rule;
 		if (r) {
 			r->used = 1;
 			v[i+1] = r->newNum - n->baseNum /*safely*/;
