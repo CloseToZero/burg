@@ -322,6 +322,9 @@ mapToPmap(Dimension d)
 static void
 doDimPmaps(Operator op)
 {
+	// Note that op->table->dimen[i]->map->count == 0 is impossible
+	// because of the error state.
+
 	int i, j;
 	Dimension d;
 	short *v;
@@ -336,6 +339,7 @@ doDimPmaps(Operator op)
 		break;
 	case 1:
 		d = op->table->dimen[0];
+		assert(d->map->count != 0);
 		if (d->map->count > 1) {
 			v = newVector();
 			im = newPlankMap(op->baseNum);
@@ -355,6 +359,8 @@ doDimPmaps(Operator op)
 		}
 		break;
 	case 2:
+		assert(op->table->dimen[0]->map->count != 0);
+		assert(op->table->dimen[1]->map->count != 0);
 		if (op->table->dimen[0]->map->count == 1 && op->table->dimen[1]->map->count == 1) {
 			op->table->dimen[0]->pmap = 0;
 			op->table->dimen[1]->pmap = 0;
@@ -365,7 +371,7 @@ doDimPmaps(Operator op)
 			for (i = 0; i < globalMap->count-1; i++) {
 				int index = d->index_map.class[sortedStates[i]->num]->num;
 				if (index) {
-					Item_Set *ts = transLval(op->table, 1, index);
+					Item_Set *ts = transLval(op->table, 0, index);
 					v[i+1] = (*ts)->newNum - op->baseNum+1;
 					assert(v[i+1] >= 0);
 				}
@@ -382,7 +388,7 @@ doDimPmaps(Operator op)
 			for (i = 0; i < globalMap->count-1; i++) {
 				int index = d->index_map.class[sortedStates[i]->num]->num;
 				if (index) {
-					Item_Set *ts = transLval(op->table, index, 1);
+					Item_Set *ts = transLval(op->table, index, 0);
 					v[i +1] = (*ts)->newNum - op->baseNum +1;
 					assert(v[i +1] >= 0);
 				}
@@ -648,7 +654,8 @@ doPlankLabel(Operator op)
 			fprintf(outfile, "\t\treturn %s[l].%s + %d;\n", 
 				im0->values->plank->name, im0->values->fieldname, im0->offset);
 		} else {
-			Item_Set *ts = transLval(op->table, 1, 0);
+			assert(op->table->dimen[0]->map->count == 1);
+			Item_Set *ts = transLval(op->table, 0, 0);
 			if (*ts) {
 				fprintf(outfile, "\t\treturn %d;\n", (*ts)->newNum);
 			} else {
@@ -660,7 +667,9 @@ doPlankLabel(Operator op)
 		im0 = op->table->dimen[0]->pmap;
 		im1 = op->table->dimen[1]->pmap;
 		if (!im0 && !im1) {
-			Item_Set *ts = transLval(op->table, 1, 1);
+			assert(op->table->dimen[0]->map->count == 1);
+			assert(op->table->dimen[1]->map->count == 1);
+			Item_Set *ts = transLval(op->table, 0, 0);
 			if (*ts) {
 				fprintf(outfile, "\t\treturn %d;\n", (*ts)->newNum);
 			} else {
@@ -698,6 +707,9 @@ doPlankLabel(Operator op)
 static void
 doPlankLabelMacrosSafely(Operator op)
 {
+	// Note that op->table->dimen[i]->map->count == 0 is impossible
+	// because of the error state.
+
 	PlankMap im0;
 	PlankMap im1;
 
@@ -735,11 +747,14 @@ doPlankLabelMacrosSafely(Operator op)
 					im0->offset);
 			}
 		} else {
-			Item_Set *ts = transLval(op->table, 1, 0);
-			if (*ts) {
-				fprintf(outfile, "\t%d\n", (*ts)->newNum+1);
-			} else {
-				fprintf(outfile, "\t%d\n", 0);
+			assert(op->table->dimen[0]->map->count == 1);
+			{
+				Item_Set *ts = transLval(op->table, 0, 0);
+				if (*ts) {
+					fprintf(outfile, "\t%d\n", (*ts)->newNum+1);
+				} else {
+					fprintf(outfile, "\t%d\n", 0);
+				}
 			}
 		}
 		break;
@@ -749,15 +764,19 @@ doPlankLabelMacrosSafely(Operator op)
 		im0 = op->table->dimen[0]->pmap;
 		im1 = op->table->dimen[1]->pmap;
 		if (!im0 && !im1) {
-			Item_Set *ts = transLval(op->table, 1, 1);
-			assert(0);
-			if (*ts) {
-				fprintf(outfile, "\t\treturn %d;\n", (*ts)->newNum+1);
-			} else {
-				fprintf(outfile, "\t\treturn %d;\n", 0);
+			assert(op->table->dimen[0]->map->count == 1);
+			assert(op->table->dimen[1]->map->count == 1);
+			{
+				Item_Set *ts = transLval(op->table, 0, 0);
+				if (*ts) {
+					fprintf(outfile, "\t\treturn %d;\n", (*ts)->newNum+1);
+				} else {
+					fprintf(outfile, "\t\treturn %d;\n", 0);
+				}
 			}
 		} else if (!im0) {
-			assert(0);
+			assert(op->table->dimen[0]->map->count == 1);
+			assert(op->table->dimen[1]->map->count != 0);
 			if (im1->exceptions) {
 				List es = im1->exceptions;
 				fprintf(outfile, "\t\tswitch (r) {\n");
@@ -779,7 +798,8 @@ doPlankLabelMacrosSafely(Operator op)
 					im1->offset);
 			}
 		} else if (!im1) {
-			assert(0);
+			assert(op->table->dimen[0]->map->count != 0);
+			assert(op->table->dimen[1]->map->count == 1);
 			if (im0->exceptions) {
 				List es = im0->exceptions;
 				fprintf(outfile, "\t\tswitch (l) {\n");
