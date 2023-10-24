@@ -767,9 +767,17 @@ doPlankLabelMacrosSafely(Operator op)
 				}
 				fprintf(outfile, "\t\t}\n");
 			}
-			fprintf(outfile, "\t\tstate = %s[r].%s; offset = %d;\n", 
-				im1->values->plank->name, im1->values->fieldname, im1->offset);
-			fprintf(outfile, "\t\tbreak;\n");
+			if (speedflag) {
+				fprintf(outfile, "\t( %s[r].%s + %d )\n",
+					im1->values->plank->name, im1->values->fieldname,
+					im1->offset);
+			} else {
+				fprintf(outfile, "\t( (%s_TEMP = %s[r].%s) ? %s_TEMP + %d : 0 )\n",
+					prefix,
+					im1->values->plank->name, im1->values->fieldname,
+					prefix,
+					im1->offset);
+			}
 		} else if (!im1) {
 			assert(0);
 			if (im0->exceptions) {
@@ -781,9 +789,17 @@ doPlankLabelMacrosSafely(Operator op)
 				}
 				fprintf(outfile, "\t\t}\n");
 			}
-			fprintf(outfile, "\t\tstate = %s[l].%s; offset = %d;\n", 
-				im0->values->plank->name, im0->values->fieldname, im0->offset);
-			fprintf(outfile, "\t\tbreak;\n");
+			if (speedflag) {
+				fprintf(outfile, "\t( %s[l].%s + %d )\n",
+					im0->values->plank->name, im0->values->fieldname,
+					im0->offset);
+			} else {
+				fprintf(outfile, "\t( (%s_TEMP = %s[l].%s) ? %s_TEMP + %d : 0 )\n",
+					prefix,
+					im0->values->plank->name, im0->values->fieldname,
+					prefix,
+					im0->offset);
+			}
 		} else {
 			assert(im0->offset == 0);
 			assert(im1->offset == 0);
