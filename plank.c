@@ -312,7 +312,7 @@ mapToPmap(Dimension d)
 		assert(index >= 0);
 		v[i+1] = index;
 	}
-	enterStateMap(im, v, width(d->map->count), &new);
+	enterStateMap(im, v, width(d->map->count-1), &new);
 	if (!new) {
 		zfree(v);
 	}
@@ -463,7 +463,7 @@ doNonTermPmaps(NonTerminal n)
 			assert(v[i+1] >= 0);
 		}
 	}
-	enterStateMap(im, v, width(n->ruleCount+1), &new);
+	enterStateMap(im, v, width(n->ruleCount), &new);
 	if (!new) {
 		zfree(v);
 	}
