@@ -8,8 +8,6 @@ char rcsid_plank[] = "$Id$";
 
 #define ERROR_VAL 0
 
-int speedflag = 0;
-
 Item_Set *sortedStates;
 static struct stateMapTable smt;
 int exceptionTolerance = 0;
@@ -36,8 +34,6 @@ static void purgePlanks(List);
 static void inToEx(void);
 static void makePlankRuleMacros(void);
 static void makePlankRule(void);
-static void exceptionSwitch(List, char *, char *, char *, int, char *);
-static void doPlankLabel(Operator);
 static void doPlankLabelSafely(Operator);
 static void doPlankLabelMacrosSafely(Operator);
 static void makePlankState(void);
@@ -568,7 +564,7 @@ makePlankRuleMacros()
 			fprintf(outfile, "%s_eruleMap[", prefix);
 			for (es = im->exceptions; es; es = es->next) {
 				Exception e = (Exception) es->x;
-				fprintf(outfile, "((state) == %d ? %d :", 
+				fprintf(outfile, "((state) == %d ? %d : ",
 						e->index, e->value);
 			}
 			fprintf(outfile, "%s[state].%s", 
@@ -577,7 +573,7 @@ makePlankRuleMacros()
 			for (es = im->exceptions; es; es = es->next) {
 				fprintf(outfile, ")");
 			}
-			fprintf(outfile, " +%d]", im->offset);
+			fprintf(outfile, " + %d]", im->offset);
 
 		} else {
 			/* nonterminal never appears on LHS. */
@@ -616,95 +612,6 @@ makePlankRule()
 }
 
 static void
-exceptionSwitch(List es, char *sw, char *pre, char *post, int offset, char *def)
-{
-	if (es) {
-		fprintf(outfile, "\t\tswitch (%s) {\n", sw);
-		for (; es; es = es->next) {
-			Exception e = (Exception) es->x;
-			fprintf(outfile, "\t\tcase %d: %s %d; %s\n", e->index, pre, e->value+offset, post);
-		}
-		if (def) {
-			fprintf(outfile, "\t\tdefault: %s;\n", def);
-		}
-		fprintf(outfile, "\t\t}\n");
-	} else {
-		if (def) {
-			fprintf(outfile, "\t\t%s;\n", def);
-		}
-	}
-}
-
-static void
-doPlankLabel(Operator op)
-{
-	PlankMap im0;
-	PlankMap im1;
-	char buf[100];
-
-	fprintf(outfile, "\tcase %d:\n", op->num);
-	switch (op->arity) {
-	case 0:
-		fprintf(outfile, "\t\treturn %d;\n", op->table->transition[0]->newNum);
-		break;
-	case 1:
-		im0 = op->table->dimen[0]->pmap;
-		if (im0) {
-			exceptionSwitch(im0->exceptions, "l", "return ", "", im0->offset, 0);
-			fprintf(outfile, "\t\treturn %s[l].%s + %d;\n", 
-				im0->values->plank->name, im0->values->fieldname, im0->offset);
-		} else {
-			assert(op->table->dimen[0]->map->count == 1);
-			Item_Set *ts = transLval(op->table, 0, 0);
-			if (*ts) {
-				fprintf(outfile, "\t\treturn %d;\n", (*ts)->newNum);
-			} else {
-				fprintf(outfile, "\t\treturn %d;\n", ERROR_VAL);
-			}
-		}
-		break;
-	case 2:
-		im0 = op->table->dimen[0]->pmap;
-		im1 = op->table->dimen[1]->pmap;
-		if (!im0 && !im1) {
-			assert(op->table->dimen[0]->map->count == 1);
-			assert(op->table->dimen[1]->map->count == 1);
-			Item_Set *ts = transLval(op->table, 0, 0);
-			if (*ts) {
-				fprintf(outfile, "\t\treturn %d;\n", (*ts)->newNum);
-			} else {
-				fprintf(outfile, "\t\treturn %d;\n", ERROR_VAL);
-			}
-		} else if (!im0) {
-			exceptionSwitch(im1->exceptions, "r", "return ", "", im1->offset, 0);
-			fprintf(outfile, "\t\treturn %s[r].%s + %d;\n", 
-				im1->values->plank->name, im1->values->fieldname, im1->offset);
-		} else if (!im1) {
-			exceptionSwitch(im0->exceptions, "l", "return ", "", im0->offset, 0);
-			fprintf(outfile, "\t\treturn %s[l].%s + %d;\n", 
-				im0->values->plank->name, im0->values->fieldname, im0->offset);
-		} else {
-			assert(im0->offset == 0);
-			assert(im1->offset == 0);
-			sprintf(buf, "l = %s[l].%s",
-				im0->values->plank->name, im0->values->fieldname);
-			exceptionSwitch(im0->exceptions, "l", "l =", "break;", 0, buf);
-			sprintf(buf, "r = %s[r].%s",
-				im1->values->plank->name, im1->values->fieldname);
-			exceptionSwitch(im1->exceptions, "r", "r =", "break;", 0, buf);
-
-			fprintf(outfile, "\t\treturn %s_%s_transition[l][r] + %d;\n", 
-				prefix,
-				op->name,
-				op->baseNum);
-		}
-		break;
-	default:
-		assert(0);
-	}
-}
-
-static void
 doPlankLabelMacrosSafely(Operator op)
 {
 	// Note that op->table->dimen[i]->map->count == 0 is impossible
@@ -722,30 +629,23 @@ doPlankLabelMacrosSafely(Operator op)
 		fprintf(outfile, "\t%d\n", op->table->transition[0]->newNum+1);
 		break;
 	case 1:
-		fprintf(outfile, "#define %s_%s_state(l)", prefix, op->name);
+		fprintf(outfile, "#define %s_%s_state(l)\t", prefix, op->name);
 		im0 = op->table->dimen[0]->pmap;
 		if (im0) {
-			if (im0->exceptions) {
-				List es = im0->exceptions;
-				assert(0);
-				fprintf(outfile, "\t\tswitch (l) {\n");
-				for (; es; es = es->next) {
-					Exception e = (Exception) es->x;
-					fprintf(outfile, "\t\tcase %d: return %d;\n", e->index, e->value ? e->value+im0->offset : 0);
-				}
-				fprintf(outfile, "\t\t}\n");
+			List es;
+			fprintf(outfile, "( (%s_TEMP = ", prefix);
+			for (es = im0->exceptions; es; es = es->next) {
+				Exception e = (Exception) es->x;
+				fprintf(outfile, "(l == %d ? %d : ",
+						e->index, e->value);
 			}
-			if (speedflag) {
-				fprintf(outfile, "\t( %s[l].%s + %d )\n",
-					im0->values->plank->name, im0->values->fieldname,
-					im0->offset);
-			} else {
-				fprintf(outfile, "\t( (%s_TEMP = %s[l].%s) ? %s_TEMP + %d : 0 )\n",
-					prefix,
-					im0->values->plank->name, im0->values->fieldname,
-					prefix,
-					im0->offset);
+			fprintf(outfile, "%s[l].%s",
+					im0->values->plank->name, im0->values->fieldname);
+			for (es = im0->exceptions; es; es = es->next) {
+				fprintf(outfile, ")");
 			}
+			fprintf(outfile, ") ? %s_TEMP + %d : 0 )\n",
+					prefix, im0->offset);
 		} else {
 			assert(op->table->dimen[0]->map->count == 1);
 			{
@@ -759,7 +659,7 @@ doPlankLabelMacrosSafely(Operator op)
 		}
 		break;
 	case 2:
-		fprintf(outfile, "#define %s_%s_state(l,r)", prefix, op->name);
+		fprintf(outfile, "#define %s_%s_state(l,r)\t", prefix, op->name);
 
 		im0 = op->table->dimen[0]->pmap;
 		im1 = op->table->dimen[1]->pmap;
@@ -769,92 +669,81 @@ doPlankLabelMacrosSafely(Operator op)
 			{
 				Item_Set *ts = transLval(op->table, 0, 0);
 				if (*ts) {
-					fprintf(outfile, "\t%d;\n", (*ts)->newNum+1);
+					fprintf(outfile, "%d;\n", (*ts)->newNum+1);
 				} else {
-					fprintf(outfile, "\t%d;\n", 0);
+					fprintf(outfile, "%d;\n", 0);
 				}
 			}
 		} else if (!im0) {
 			assert(op->table->dimen[0]->map->count == 1);
 			assert(op->table->dimen[1]->map->count != 0);
-			if (im1->exceptions) {
-				List es = im1->exceptions;
-				fprintf(outfile, "\t\tswitch (r) {\n");
-				for (; es; es = es->next) {
+			{
+				List es;
+				fprintf(outfile, "( (%s_TEMP = ", prefix);
+				for (es = im1->exceptions; es; es = es->next) {
 					Exception e = (Exception) es->x;
-					fprintf(outfile, "\t\tcase %d: return %d;\n", e->index, e->value ? e->value+im1->offset : 0);
+					fprintf(outfile, "(r == %d ? %d : ",
+							e->index, e->value);
 				}
-				fprintf(outfile, "\t\t}\n");
-			}
-			if (speedflag) {
-				fprintf(outfile, "\t( %s[r].%s + %d )\n",
-					im1->values->plank->name, im1->values->fieldname,
-					im1->offset);
-			} else {
-				fprintf(outfile, "\t( (%s_TEMP = %s[r].%s) ? %s_TEMP + %d : 0 )\n",
-					prefix,
-					im1->values->plank->name, im1->values->fieldname,
-					prefix,
-					im1->offset);
+				fprintf(outfile, "%s[r].%s",
+						im1->values->plank->name, im1->values->fieldname);
+				for (es = im1->exceptions; es; es = es->next) {
+					fprintf(outfile, ")");
+				}
+				fprintf(outfile, ") ? %s_TEMP + %d : 0 )\n",
+						prefix, im1->offset);
 			}
 		} else if (!im1) {
 			assert(op->table->dimen[0]->map->count != 0);
 			assert(op->table->dimen[1]->map->count == 1);
-			if (im0->exceptions) {
-				List es = im0->exceptions;
-				fprintf(outfile, "\t\tswitch (l) {\n");
-				for (; es; es = es->next) {
+			{
+				List es;
+				fprintf(outfile, "( (%s_TEMP = ", prefix);
+				for (es = im0->exceptions; es; es = es->next) {
 					Exception e = (Exception) es->x;
-					fprintf(outfile, "\t\tcase %d: return %d;\n", e->index, e->value ? e->value+im0->offset : 0);
+					fprintf(outfile, "(l == %d ? %d : ",
+							e->index, e->value);
 				}
-				fprintf(outfile, "\t\t}\n");
-			}
-			if (speedflag) {
-				fprintf(outfile, "\t( %s[l].%s + %d )\n",
-					im0->values->plank->name, im0->values->fieldname,
-					im0->offset);
-			} else {
-				fprintf(outfile, "\t( (%s_TEMP = %s[l].%s) ? %s_TEMP + %d : 0 )\n",
-					prefix,
-					im0->values->plank->name, im0->values->fieldname,
-					prefix,
-					im0->offset);
+				fprintf(outfile, "%s[l].%s",
+						im0->values->plank->name, im0->values->fieldname);
+				for (es = im0->exceptions; es; es = es->next) {
+					fprintf(outfile, ")");
+				}
+				fprintf(outfile, ") ? %s_TEMP + %d : 0 )\n",
+						prefix, im0->offset);
 			}
 		} else {
 			assert(im0->offset == 0);
 			assert(im1->offset == 0);
-			/*
-			sprintf(buf, "l = %s[l].%s",
-				im0->values->plank->name, im0->values->fieldname);
-			exceptionSwitch(im0->exceptions, "l", "l =", "break;", 0, buf);
-			sprintf(buf, "r = %s[r].%s",
-				im1->values->plank->name, im1->values->fieldname);
-			exceptionSwitch(im1->exceptions, "r", "r =", "break;", 0, buf);
-
-			fprintf(outfile, "\t\tstate = %s_%s_transition[l][r]; offset = %d;\n", 
-				prefix,
-				op->name,
-				op->baseNum);
-			fprintf(outfile, "\t\tbreak;\n");
-			*/
-
-			if (speedflag) {
-				fprintf(outfile, "\t( %s_%s_transition[%s[l].%s][%s[r].%s] + %d)\n",
-					prefix,
-					op->name,
-					im0->values->plank->name, im0->values->fieldname,
-					im1->values->plank->name, im1->values->fieldname,
-					op->baseNum);
-			} else {
-				fprintf(outfile, "\t( (%s_TEMP = %s_%s_transition[%s[l].%s][%s[r].%s]) ? ",
-					prefix,
-					prefix,
-					op->name,
-					im0->values->plank->name, im0->values->fieldname,
-					im1->values->plank->name, im1->values->fieldname);
-				fprintf(outfile, "%s_TEMP + %d : 0 )\n",
-					prefix,
-					op->baseNum);
+			{
+				List es;
+				fprintf(outfile, "( (%s_TEMP = %s_%s_transition[",
+						prefix,
+						prefix,
+						op->name);
+				for (es = im0->exceptions; es; es = es->next) {
+					Exception e = (Exception) es->x;
+					fprintf(outfile, "(l == %d ? %d : ",
+							e->index, e->value);
+				}
+				fprintf(outfile, "%s[l].%s",
+						im0->values->plank->name, im0->values->fieldname);
+				for (es = im0->exceptions; es; es = es->next) {
+					fprintf(outfile, ")");
+				}
+				fprintf(outfile, "][");
+				for (es = im1->exceptions; es; es = es->next) {
+					Exception e = (Exception) es->x;
+					fprintf(outfile, "(r == %d ? %d : ",
+							e->index, e->value);
+				}
+				fprintf(outfile, "%s[r].%s",
+						im1->values->plank->name, im1->values->fieldname);
+				for (es = im1->exceptions; es; es = es->next) {
+					fprintf(outfile, ")");
+				}
+				fprintf(outfile, "]) ? %s_TEMP + %d : 0 )\n",
+						prefix, op->baseNum);
 			}
 		}
 		break;

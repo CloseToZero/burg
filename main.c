@@ -61,9 +61,6 @@ main(int argc, char **argv)
 			case 'd':
 				diagnostics = 1;
 				break;
-			case 'S':
-				speedflag = 1;
-				break;
 			case 't':
 				trimflag = 1;
 				break;
