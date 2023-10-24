@@ -64,9 +64,6 @@ main(int argc, char **argv)
 			case 't':
 				trimflag = 1;
 				break;
-			case 'G':
-				grammarflag = 1;
-				break;
 			default:
 				fprintf(stderr, "Bad option (%s)\n", argv[i]);
 				exit(1);

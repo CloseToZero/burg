@@ -125,7 +125,6 @@ extern List	ruleASTs;
 extern FILE	*outfile;
 extern char	*prefix;
 extern int 	trimflag;
-extern int 	grammarflag;
 
 extern void doGrammarNts();
 extern void doGram();

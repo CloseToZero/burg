@@ -5,8 +5,6 @@ char rcsid_fe[] = "$Id$";
 #include "b.h"
 #include "fe.h"
 
-int grammarflag;
-
 static int arity;
 
 List	ruleASTs;
