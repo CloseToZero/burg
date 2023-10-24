@@ -769,9 +769,9 @@ doPlankLabelMacrosSafely(Operator op)
 			{
 				Item_Set *ts = transLval(op->table, 0, 0);
 				if (*ts) {
-					fprintf(outfile, "\t\treturn %d;\n", (*ts)->newNum+1);
+					fprintf(outfile, "\t%d;\n", (*ts)->newNum+1);
 				} else {
-					fprintf(outfile, "\t\treturn %d;\n", 0);
+					fprintf(outfile, "\t%d;\n", 0);
 				}
 			}
 		} else if (!im0) {
