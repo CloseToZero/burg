@@ -1,6 +1,4 @@
 %{
-char rcsid_gram[] = "$Id$";
-
 #include <stdio.h>
 #include "b.h"
 #include "fe.h"
@@ -21,7 +19,6 @@ char rcsid_gram[] = "$Id$";
 
 %term ERROR
 %term K_TERM
-%term K_GRAM
 %term K_START
 %term K_PPERCENT
 
@@ -33,7 +30,7 @@ char rcsid_gram[] = "$Id$";
 %type <y_intlist> cost costtail
 %type <y_ruleAST> rule
 %type <y_patternAST> pattern
-%type <y_list> decls rules bindinglist grammarlist
+%type <y_list> decls rules bindinglist
 %%
 
 
@@ -51,13 +48,8 @@ decls	: /* lambda */	{ $$ = 0; }
 	;
 
 decl	: K_TERM bindinglist	{ $$ = newArity(-1, $2); }
-	| K_GRAM grammarlist	{ $$ = 0; doGram($2); }
 	| K_START ID		{ $$ = 0; doStart($2); }	/* kludge */
 	;
-
-grammarlist	: /* lambda */		{ $$ = 0; }
-		| grammarlist ID	{ $$ = newList($2, $1); }
-		;
 
 bindinglist	: /* lambda */		{ $$ = 0; }
 		| bindinglist binding	{ $$ = newList($2, $1); }

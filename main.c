@@ -122,7 +122,6 @@ main(int argc, char **argv)
 
 	findChainRules();
 	findAllPairs();
-	doGrammarNts();
 	build();
 
 	debug(debugTables, foreachList((ListFn) dumpOperator_l, operators));

@@ -8,7 +8,6 @@ char rcsid_fe[] = "$Id$";
 static int arity;
 
 List	ruleASTs;
-List	grammarNts;
 
 static void doBinding(Binding);
 static void doDecl(Arity);
@@ -245,39 +244,6 @@ doStart(char *name)
 			exit(1);
 		}
 	}
-}
-
-void
-doGrammarNts()
-{
-	List l;
-	int new;
-
-	for (l = grammarNts; l; l = l->next) {
-		char *n = (char*) l->x;
-		Symbol s;
-
-		s = enter(n, &new);
-		if (new) {
-			fprintf(stderr, "ERROR: %%gram, unused non-terminal: \"%s\"\n", n);
-			exit(1);
-		}
-		if (s->tag != NONTERMINAL) {
-			fprintf(stderr, "ERROR: %%gram, Not a non-terminal: \"%s\"\n", n);
-			exit(1);
-		}
-		l->x = s;
-	}
-}
-
-void
-doGram(List nts)
-{
-	if (grammarNts) {
-		yyerror1("Redeclaration of %%gram\n");
-		exit(1);
-	}
-	grammarNts = nts;
 }
 
 Arity 

@@ -41,11 +41,10 @@
    enum yytokentype {
      ERROR = 258,
      K_TERM = 259,
-     K_GRAM = 260,
-     K_START = 261,
-     K_PPERCENT = 262,
-     ID = 263,
-     INT = 264
+     K_START = 260,
+     K_PPERCENT = 261,
+     ID = 262,
+     INT = 263
    };
 #endif
 
@@ -56,7 +55,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 9 "gram.y"
+#line 7 "gram.y"
 
 	int y_int;
 	char *y_string;
@@ -70,7 +69,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 74 "gram.tab.h"
+#line 73 "gram.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

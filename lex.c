@@ -206,7 +206,6 @@ yylex()
 				*ptr = '\0';
 				if (!strcmp(buf, "term")) return K_TERM;
 				if (!strcmp(buf, "start")) return K_START;
-				if (!strcmp(buf, "gram")) return K_GRAM;
 				yyerror("illegal character after %%");
 				continue;
 			default:

@@ -250,7 +250,6 @@ extern List		chainrules;
 extern List		operators;
 extern List		leaves;
 extern List		nonterminals;
-extern List		grammarNts;
 extern Queue		globalQ;
 extern Mapping		globalMap;
 extern int		exceptionTolerance;

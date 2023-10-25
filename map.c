@@ -71,26 +71,6 @@ encode(Mapping m, Item_Set ts, int *new)
 	assert(ts);
 	assert(m->count <= m->max_size);
 
-	if (grammarNts && errorState && m == globalMap) {
-		List l;
-		int found;
-
-		found = 0;
-		for (l = grammarNts; l; l = l->next) {
-			Symbol s;
-			s = (Symbol) l->x;
-
-			if (ts->virgin[s->u.nt->num].rule) {
-				found = 1;
-				break;
-			}
-		}
-		if (!found) {
-			*new = 0;
-			return errorState;
-		}
-	}
-
 	*new = 0;
 	h = hash(ts, m->hash_size);
 	for (l = m->hash[h]; l; l = l->next) {
