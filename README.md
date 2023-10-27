@@ -34,7 +34,7 @@ pass `-I` option to the instruction selector generator.
 # How does BURG work? How to understand the source code?
 
 The most useful papers that helped me understand the code are the
-following (I will talk about the details after the list):
+following:
 
 1. [Code Generation Using Tree Matching and Dynamic Programming](https://dl.acm.org/doi/10.1145/69558.75700)
 2. [Engineering a simple, efficient code-generator generator](https://dl.acm.org/doi/abs/10.1145/151640.151642)
